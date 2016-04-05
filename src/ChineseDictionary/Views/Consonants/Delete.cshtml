@@ -1,0 +1,28 @@
+@model ChineseDictionary.Models.Consonant
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2 class="m-t-1">Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Consonant</h4>
+    <hr />
+    <dl>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-secondary" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

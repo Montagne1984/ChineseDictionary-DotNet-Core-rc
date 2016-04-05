@@ -1,0 +1,36 @@
+@model ChineseDictionary.Models.Tone
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2 class="m-t-1">Details</h2>
+
+<div>
+    <h4>Tone</h4>
+    <hr />
+    <dl>
+        <dt>
+            @Html.DisplayNameFor(model => model.Area)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Area.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ToneType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ToneType.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Value)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Value)
+        </dd>
+    </dl>
+</div>
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</p>

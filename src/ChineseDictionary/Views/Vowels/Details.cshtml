@@ -1,0 +1,24 @@
+@model ChineseDictionary.Models.Vowel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2 class="m-t-1">Details</h2>
+
+<div>
+    <h4>Vowel</h4>
+    <hr />
+    <dl>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+</div>
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</p>
