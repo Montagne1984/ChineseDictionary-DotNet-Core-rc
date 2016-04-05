@@ -1,11 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ChineseDictionary.Models
+﻿namespace ChineseDictionary.Models
 {
-    public class Vowel
+    public class Vowel : Phoneme
     {
-        public int Id { get; set; }
-        [Required, MaxLength(5)]
-        public string Name { get; set; }
     }
 }
