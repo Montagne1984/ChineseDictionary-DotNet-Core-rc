@@ -18,6 +18,7 @@ namespace ChineseDictionary.Models
         public DbSet<Pronunciation> Pronunciations { get; set; }
         public DbSet<Character> Characters { get; set; }
         public DbSet<Word> Words { get; set; }
+        public DbSet<WordPronunciation> WordPronunciations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -68,13 +69,6 @@ namespace ChineseDictionary.Models
             builder.Entity<WordPronunciation>();
             builder.Entity<WordDefinition>();
 
-            //builder.Entity<CharacterPronunciation>()
-            //    .HasOne(cp => cp.Character)
-            //    .WithMany(c => c.CharacterPronunciations);
-            //builder.Entity<CharacterPronunciation>()
-            //    .HasOne(cp => cp.Pronunciation)
-            //    .WithMany(p => p.CharacterPronunciations);
-
             builder.Entity<WordPronunciationDefinition>()
                 .HasOne(wpd => wpd.WordPronunciation)
                 .WithMany(wp => wp.WordPronunciationDefinitions)
@@ -84,10 +78,38 @@ namespace ChineseDictionary.Models
                 .WithMany(wd => wd.WordPronunciationDefinitions)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //builder.Entity<Tone>()
-            //    .HasOne(t => t.Area)
-            //    .WithMany(a => wp.WordCharacterPronunciations)
-            //    .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<ConsonantMapping>()
+                .HasOne(cm => cm.Area)
+                .WithMany(a => a.ConsonantMappings)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<VowelMapping>()
+                .HasOne(vm => vm.Area)
+                .WithMany(a => a.VowelMappings)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Tone>()
+                .HasOne(t => t.Area)
+                .WithMany(a => a.Tones)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<WordPronunciation>()
+                .HasOne(wp => wp.Area)
+                .WithMany(a => a.WordPronunciations)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Pronunciation>()
+                .HasOne(p => p.Consonant)
+                .WithMany(c => c.Pronunciations)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Pronunciation>()
+                .HasOne(p => p.Vowel)
+                .WithMany(v => v.Pronunciations)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Pronunciation>()
+                .HasOne(p => p.Tone)
+                .WithMany(t => t.Pronunciations)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Tone>()
+                .HasOne(t => t.ToneType)
+                .WithMany(tt => tt.Tones)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

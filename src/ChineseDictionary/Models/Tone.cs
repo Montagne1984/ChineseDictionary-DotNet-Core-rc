@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ChineseDictionary.Models
 {
@@ -15,5 +16,6 @@ namespace ChineseDictionary.Models
         public ToneType ToneType { get; set; }
         [Required, MaxLength(10)]
         public string Value { get; set; }
+        public List<Pronunciation> Pronunciations { get; set; }
     }
 }
