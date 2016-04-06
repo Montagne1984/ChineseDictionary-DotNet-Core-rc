@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
+using Microsoft.Data.Entity.Metadata;
 
 namespace ChineseDictionary.Models
 {
@@ -20,6 +17,7 @@ namespace ChineseDictionary.Models
         public DbSet<Tone> Tones { get; set; }
         public DbSet<Pronunciation> Pronunciations { get; set; }
         public DbSet<Character> Characters { get; set; }
+        public DbSet<Word> Words { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -65,13 +63,31 @@ namespace ChineseDictionary.Models
                     cp.CharacterId,
                     cp.PronunciationId
                 });
+            builder.Entity<Word>().HasAlternateKey(w => w.Name);
+            builder.Entity<WordCharacterPronunciation>();
+            builder.Entity<WordPronunciation>();
+            builder.Entity<WordDefinition>();
 
-            builder.Entity<CharacterPronunciation>()
-                .HasOne(cp => cp.Character)
-                .WithMany(c => c.CharacterPronunciations);
-            builder.Entity<CharacterPronunciation>()
-                .HasOne(cp => cp.Pronunciation)
-                .WithMany(p => p.CharacterPronunciations);
+            //builder.Entity<CharacterPronunciation>()
+            //    .HasOne(cp => cp.Character)
+            //    .WithMany(c => c.CharacterPronunciations);
+            //builder.Entity<CharacterPronunciation>()
+            //    .HasOne(cp => cp.Pronunciation)
+            //    .WithMany(p => p.CharacterPronunciations);
+
+            builder.Entity<WordPronunciationDefinition>()
+                .HasOne(wpd => wpd.WordPronunciation)
+                .WithMany(wp => wp.WordPronunciationDefinitions)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<WordPronunciationDefinition>()
+                .HasOne(wpd => wpd.WordDefinition)
+                .WithMany(wd => wd.WordPronunciationDefinitions)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //builder.Entity<Tone>()
+            //    .HasOne(t => t.Area)
+            //    .WithMany(a => wp.WordCharacterPronunciations)
+            //    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
