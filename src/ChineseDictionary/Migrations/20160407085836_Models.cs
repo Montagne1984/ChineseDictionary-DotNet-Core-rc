@@ -242,13 +242,13 @@ namespace ChineseDictionary.Migrations
                         column: x => x.LabelId,
                         principalTable: "Label",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_WordLabel_Word_WordId",
                         column: x => x.WordId,
                         principalTable: "Word",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
             migrationBuilder.CreateTable(
                 name: "WordPronunciation",
@@ -273,7 +273,7 @@ namespace ChineseDictionary.Migrations
                         column: x => x.WordId,
                         principalTable: "Word",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
             migrationBuilder.CreateTable(
                 name: "Tone",
@@ -319,13 +319,13 @@ namespace ChineseDictionary.Migrations
                         column: x => x.WordDefinitionId,
                         principalTable: "WordDefinition",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_WordPronunciationDefinition_WordPronunciation_WordPronunciationId",
                         column: x => x.WordPronunciationId,
                         principalTable: "WordPronunciation",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
             migrationBuilder.CreateTable(
                 name: "Pronunciation",

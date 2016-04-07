@@ -72,24 +72,6 @@ namespace ChineseDictionary.Models
             builder.Entity<Label>().HasAlternateKey(l => l.Name);
             builder.Entity<WordLabel>();
 
-            builder.Entity<WordPronunciationDefinition>()
-                .HasOne(wpd => wpd.WordPronunciation)
-                .WithMany(wp => wp.WordPronunciationDefinitions)
-                .OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<WordPronunciationDefinition>()
-                .HasOne(wpd => wpd.WordDefinition)
-                .WithMany(wd => wd.WordPronunciationDefinitions)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<WordLabel>()
-                .HasOne(wl => wl.Word)
-                .WithMany(w => w.WordLabels)
-                .OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<WordLabel>()
-                .HasOne(wl => wl.Label)
-                .WithMany(l => l.WordLabels)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<ConsonantMapping>()
                 .HasOne(cm => cm.Area)
                 .WithMany(a => a.ConsonantMappings)
@@ -121,6 +103,10 @@ namespace ChineseDictionary.Models
             builder.Entity<Tone>()
                 .HasOne(t => t.ToneType)
                 .WithMany(tt => tt.Tones)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<WordPronunciation>()
+                .HasOne(wp => wp.Word)
+                .WithMany(w => w.WordPronunciations)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

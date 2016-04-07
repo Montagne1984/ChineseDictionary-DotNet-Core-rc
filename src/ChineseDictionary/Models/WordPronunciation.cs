@@ -9,6 +9,8 @@ namespace ChineseDictionary.Models
         [Required]
         public int WordId { get; set; }
         [Required]
+        public Word Word { get; set; }
+        [Required]
         public int AreaId { get; set; }
         [Required]
         public Area Area { get; set; }
