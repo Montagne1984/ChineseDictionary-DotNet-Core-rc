@@ -82,6 +82,19 @@ namespace ChineseDictionary.Migrations
                     table.UniqueConstraint("AK_IPAVowel_Symbol", x => x.Symbol);
                 });
             migrationBuilder.CreateTable(
+                name: "Label",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Label", x => x.Id);
+                    table.UniqueConstraint("AK_Label_Name", x => x.Name);
+                });
+            migrationBuilder.CreateTable(
                 name: "Vowel",
                 columns: table => new
                 {
@@ -211,6 +224,31 @@ namespace ChineseDictionary.Migrations
                         principalTable: "Word",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+            migrationBuilder.CreateTable(
+                name: "WordLabel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    LabelId = table.Column<int>(nullable: false),
+                    WordId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WordLabel", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WordLabel_Label_LabelId",
+                        column: x => x.LabelId,
+                        principalTable: "Label",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WordLabel_Word_WordId",
+                        column: x => x.WordId,
+                        principalTable: "Word",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
             migrationBuilder.CreateTable(
                 name: "WordPronunciation",
@@ -433,10 +471,12 @@ namespace ChineseDictionary.Migrations
             migrationBuilder.DropTable("ConsonantMapping");
             migrationBuilder.DropTable("VowelMapping");
             migrationBuilder.DropTable("WordCharacterPronunciation");
+            migrationBuilder.DropTable("WordLabel");
             migrationBuilder.DropTable("WordPronunciationDefinition");
             migrationBuilder.DropTable("IPAConsonant");
             migrationBuilder.DropTable("IPAVowel");
             migrationBuilder.DropTable("CharacterPronunciation");
+            migrationBuilder.DropTable("Label");
             migrationBuilder.DropTable("WordDefinition");
             migrationBuilder.DropTable("WordPronunciation");
             migrationBuilder.DropTable("Character");

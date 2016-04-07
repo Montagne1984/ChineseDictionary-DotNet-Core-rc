@@ -8,7 +8,7 @@ using ChineseDictionary.Models;
 namespace ChineseDictionary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160406130114_Models")]
+    [Migration("20160407040400_Models")]
     partial class Models
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,6 +169,18 @@ namespace ChineseDictionary.Migrations
                     b.HasAlternateKey("Symbol");
                 });
 
+            modelBuilder.Entity("ChineseDictionary.Models.Label", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Name");
+                });
+
             modelBuilder.Entity("ChineseDictionary.Models.Pronunciation", b =>
                 {
                     b.Property<int>("Id")
@@ -284,6 +296,18 @@ namespace ChineseDictionary.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired();
+
+                    b.Property<int>("WordId");
+
+                    b.HasKey("Id");
+                });
+
+            modelBuilder.Entity("ChineseDictionary.Models.WordLabel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("LabelId");
 
                     b.Property<int>("WordId");
 
@@ -483,6 +507,17 @@ namespace ChineseDictionary.Migrations
 
             modelBuilder.Entity("ChineseDictionary.Models.WordDefinition", b =>
                 {
+                    b.HasOne("ChineseDictionary.Models.Word")
+                        .WithMany()
+                        .HasForeignKey("WordId");
+                });
+
+            modelBuilder.Entity("ChineseDictionary.Models.WordLabel", b =>
+                {
+                    b.HasOne("ChineseDictionary.Models.Label")
+                        .WithMany()
+                        .HasForeignKey("LabelId");
+
                     b.HasOne("ChineseDictionary.Models.Word")
                         .WithMany()
                         .HasForeignKey("WordId");

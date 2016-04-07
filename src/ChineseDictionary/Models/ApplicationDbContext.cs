@@ -19,6 +19,7 @@ namespace ChineseDictionary.Models
         public DbSet<Character> Characters { get; set; }
         public DbSet<Word> Words { get; set; }
         public DbSet<WordPronunciation> WordPronunciations { get; set; }
+        public DbSet<Label> Labels { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -68,6 +69,8 @@ namespace ChineseDictionary.Models
             builder.Entity<WordCharacterPronunciation>();
             builder.Entity<WordPronunciation>();
             builder.Entity<WordDefinition>();
+            builder.Entity<Label>().HasAlternateKey(l => l.Name);
+            builder.Entity<WordLabel>();
 
             builder.Entity<WordPronunciationDefinition>()
                 .HasOne(wpd => wpd.WordPronunciation)
@@ -76,6 +79,15 @@ namespace ChineseDictionary.Models
             builder.Entity<WordPronunciationDefinition>()
                 .HasOne(wpd => wpd.WordDefinition)
                 .WithMany(wd => wd.WordPronunciationDefinitions)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<WordLabel>()
+                .HasOne(wl => wl.Word)
+                .WithMany(w => w.WordLabels)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<WordLabel>()
+                .HasOne(wl => wl.Label)
+                .WithMany(l => l.WordLabels)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<ConsonantMapping>()
