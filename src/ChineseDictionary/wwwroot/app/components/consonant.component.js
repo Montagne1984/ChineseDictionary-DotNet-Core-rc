@@ -1,0 +1,82 @@
+System.register(["angular2/core"], function(exports_1) {
+    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
+    var __metadata = (this && this.__metadata) || function (k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+    };
+    var core_1;
+    var ConsonantComponent, Consonant;
+    return {
+        setters:[
+            function (core_1_1) {
+                core_1 = core_1_1;
+            }],
+        execute: function() {
+            ConsonantComponent = (function () {
+                function ConsonantComponent() {
+                    this.consonant = new Consonant();
+                }
+                ConsonantComponent.prototype.ngOnInit = function () {
+                    //this.consonantService.getCarsSmall().then(consonants => this.consonants = consonants);
+                    this.consonants = [];
+                };
+                ConsonantComponent.prototype.showDialogToAdd = function () {
+                    this.newCar = true;
+                    this.consonant = new Consonant();
+                    this.displayDialog = true;
+                };
+                ConsonantComponent.prototype.save = function () {
+                    if (this.newCar)
+                        this.consonants.push(this.consonant);
+                    else
+                        this.consonants[this.findSelectedConsonantIndex()] = this.consonant;
+                    this.consonant = null;
+                    this.displayDialog = false;
+                };
+                ConsonantComponent.prototype.delete = function () {
+                    this.consonants.splice(this.findSelectedConsonantIndex(), 1);
+                    this.consonant = null;
+                    this.displayDialog = false;
+                };
+                ConsonantComponent.prototype.onRowSelect = function (event) {
+                    this.newCar = false;
+                    this.consonant = this.cloneCar(event.data);
+                    this.displayDialog = true;
+                };
+                ConsonantComponent.prototype.cloneCar = function (c) {
+                    var car = new Consonant();
+                    for (var prop in c) {
+                        car[prop] = c[prop];
+                    }
+                    return car;
+                };
+                ConsonantComponent.prototype.findSelectedConsonantIndex = function () {
+                    return this.consonants.indexOf(this.selectedConsonant);
+                };
+                ConsonantComponent = __decorate([
+                    core_1.Component({
+                        selector: "static",
+                        templateUrl: "app/components/consonant.html"
+                    }), 
+                    __metadata('design:paramtypes', [])
+                ], ConsonantComponent);
+                return ConsonantComponent;
+            })();
+            exports_1("ConsonantComponent", ConsonantComponent);
+            Consonant = (function () {
+                function Consonant(vin, year, brand, color) {
+                    this.vin = vin;
+                    this.year = year;
+                    this.brand = brand;
+                    this.color = color;
+                }
+                return Consonant;
+            })();
+        }
+    }
+});
+//# sourceMappingURL=consonant.component.js.map

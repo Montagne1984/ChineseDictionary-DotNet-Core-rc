@@ -7,7 +7,7 @@ var gulp = require("gulp"),
     cssmin = require("gulp-cssmin"),
     uglify = require("gulp-uglify");
 
-var angularJs = [
+var libPaths = [
     "./node_modules/es6-shim/es6-shim.min.js",
     "./node_modules/systemjs/dist/system-polyfills.js",
     "./node_modules/angular2/es6/dev/src/testing/shims_for_IE.js",
@@ -16,12 +16,21 @@ var angularJs = [
     "./node_modules/rxjs/bundles/Rx.js",
     "./node_modules/angular2/bundles/angular2.dev.js",
     './node_modules/angular2/bundles/router.dev.js',
-    './node_modules/angular2/bundles/http.dev.js'
+    './node_modules/angular2/bundles/http.dev.js',
+    //'./node_modules/es6-shim/**/*',
+    //'./node_modules/systemjs/**/*',
+    //'./node_modules/angular2/**/*',
+    //'./node_modules/rxjs/**/*',
+    './node_modules/primeng/**/*',
+    './node_modules/primeui/primeui-ng-all.js',
+    './node_modules/primeui/themes/bootstrap/theme.css',
+    './node_modules/primeui/primeui-ng-all.css'
 ];
 
-gulp.task('copy:js', function () {
-    gulp.src(angularJs)
-        .pipe(gulp.dest('./wwwroot/js/angular2'));
+gulp.task('copy:lib', function () {
+    gulp.src(libPaths, {
+        base: './node_modules'
+    }).pipe(gulp.dest('./wwwroot/lib'));
 });
 
 var paths = {
@@ -59,5 +68,5 @@ gulp.task("min:css", function () {
         .pipe(gulp.dest("."));
 });
 
-gulp.task('copy', ['copy:js']);
+gulp.task('copy', ['copy:lib']);
 gulp.task("min", ["min:js", "min:css"]);

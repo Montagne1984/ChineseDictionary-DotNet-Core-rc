@@ -64,6 +64,9 @@ textarea {
     .navbar-nav {
         .nav-item {
             float: none;
+            .nav-link {
+                padding-left: 0;
+            }
         }
 
         .nav-item + .nav-item {

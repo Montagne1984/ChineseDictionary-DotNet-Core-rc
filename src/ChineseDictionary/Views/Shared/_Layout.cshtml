@@ -9,6 +9,9 @@
     <environment names="Development">
         @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="~/lib/primeui/themes/bootstrap/theme.css" />
+        <link rel="stylesheet" type="text/css" href="PATH/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="~/lib/primeui/primeui-ng-all.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment names="Staging,Production">
@@ -53,16 +56,15 @@
         <script src="~/lib/tether/dist/js/tether.js"></script>
         @*<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>*@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
-        <script src="~/js/angular2/es6-shim.min.js"></script>
-        <script src="~/js/angular2/system-polyfills.js"></script>
-        <script src="~/js/angular2/shims_for_IE.js"></script>
+        <script src="~/lib/es6-shim/es6-shim.min.js"></script>
+        <script src="~/lib/systemjs/dist/system-polyfills.js"></script>
+        <script src="~/lib/angular2/es6/dev/src/testing/shims_for_IE.js"></script>
 
-        <script src="~/js/angular2/angular2-polyfills.js"></script>
-        <script src="~/js/angular2/system.src.js"></script>
-        <script src="~/js/angular2/Rx.js"></script>
-        <script src="~/js/angular2/angular2.dev.js"></script>
-        <script src="~/js/angular2/http.dev.js"></script>
-        <script src="~/js/angular2/router.dev.js"></script>
+        <script src="~/lib/angular2/bundles/angular2-polyfills.js"></script>
+        <script src="~/lib/systemjs/dist/system.src.js"></script>
+        <script src="~/lib/angular2/bundles/http.dev.js"></script>
+        <script src="~/lib/angular2/bundles/router.dev.js"></script>
+        <script src="~/lib/primeui/primeui-ng-all.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment names="Staging,Production">
@@ -80,16 +82,27 @@
     </environment>
     <script>
         System.config({
+            defaultJSExtensions: true,
             packages: {
                 app: {
                     format: 'register',
                     defaultExtension: 'js'
+                },
+                lib: {
+                    format: 'register',
+                    defaultExtension: 'js'
                 }
+            },
+            map: {
+                'angular2': 'lib/angular2',
+                'primeng': 'lib/primeng'
             }
         });
         System.import('app/main')
               .then(null, console.error.bind(console));
     </script>
+    <script src="~/lib/rxjs/bundles/Rx.js"></script>
+    <script src="~/lib/angular2/bundles/angular2.dev.js"></script>
 
     @RenderSection("scripts", required: false)
 </body>

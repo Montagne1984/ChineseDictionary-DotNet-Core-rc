@@ -31,5 +31,10 @@ namespace ChineseDictionary.Controllers
         {
             return View();
         }
+
+        public IActionResult Grid()
+        {
+            return View();
+        }
     }
 }

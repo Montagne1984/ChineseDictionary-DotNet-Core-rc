@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/router', "./components/static.component"], function(exports_1) {
+System.register(['angular2/core', 'primeng/primeng'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,18 +8,15 @@ System.register(['angular2/core', 'angular2/router', "./components/static.compon
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, static_component_1;
+    var core_1, primeng_1;
     var AppComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (router_1_1) {
-                router_1 = router_1_1;
-            },
-            function (static_component_1_1) {
-                static_component_1 = static_component_1_1;
+            function (primeng_1_1) {
+                primeng_1 = primeng_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -28,30 +25,9 @@ System.register(['angular2/core', 'angular2/router', "./components/static.compon
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: '<h1>My First Angular 2 App</h1><router-outlet></router-outlet>',
-                        directives: [router_1.ROUTER_DIRECTIVES],
-                        providers: [
-                            router_1.ROUTER_PROVIDERS
-                        ]
-                    }),
-                    router_1.RouteConfig([
-                        {
-                            path: '/index',
-                            name: 'Index',
-                            component: static_component_1.StaticComponent,
-                            useAsDefault: true
-                        },
-                        new router_1.AsyncRoute({
-                            path: "/sub",
-                            name: "Sub",
-                            loader: function () { return System.import("app/components/mvc.component").then(function (c) { return c["MvcComponent"]; }); }
-                        }),
-                        new router_1.AsyncRoute({
-                            path: "/numbers",
-                            name: "Numbers",
-                            loader: function () { return System.import("app/components/api.component").then(function (c) { return c["ApiComponent"]; }); }
-                        })
-                    ]), 
+                        template: "\n        <h1>My First PrimeNG App</h1>\n        <input type=\"text\" pInputText/>\n    ",
+                        directives: [primeng_1.InputText]
+                    }), 
                     __metadata('design:paramtypes', [])
                 ], AppComponent);
                 return AppComponent;

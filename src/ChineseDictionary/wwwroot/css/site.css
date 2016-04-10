@@ -47,6 +47,8 @@ textarea {
 @media (max-width: 767px) {
   .navbar-nav .nav-item {
     float: none; }
+    .navbar-nav .nav-item .nav-link {
+      padding-left: 0; }
   .navbar-nav .nav-item + .nav-item {
     margin-left: 0; } }
 
