@@ -1,4 +1,6 @@
 ﻿import {Component, OnInit} from "angular2/core";
+import {Button} from 'primeng/primeng';
+import {Dialog} from 'primeng/primeng';
 import {DataTable} from 'primeng/primeng';
 import {Column} from 'primeng/primeng';
 
