@@ -17,6 +17,10 @@ textarea {
     max-width: 280px;
 }
 
+input.ui-inputtext {
+    line-height: normal;
+}
+
 /* Carousel */
 .carousel-caption {
     z-index: 10 !important;

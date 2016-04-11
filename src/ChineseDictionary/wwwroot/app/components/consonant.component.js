@@ -1,4 +1,4 @@
-System.register(["angular2/core"], function(exports_1) {
+System.register(["angular2/core", 'primeng/primeng'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,12 +8,15 @@ System.register(["angular2/core"], function(exports_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var core_1, primeng_1;
     var ConsonantComponent, Consonant;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (primeng_1_1) {
+                primeng_1 = primeng_1_1;
             }],
         execute: function() {
             ConsonantComponent = (function () {
@@ -60,7 +63,8 @@ System.register(["angular2/core"], function(exports_1) {
                 ConsonantComponent = __decorate([
                     core_1.Component({
                         selector: "static",
-                        templateUrl: "app/components/consonant.html"
+                        templateUrl: "app/components/consonant.html",
+                        directives: [primeng_1.Button, primeng_1.Dialog, primeng_1.DataTable, primeng_1.Column, primeng_1.Header, primeng_1.Footer, primeng_1.InputText]
                     }), 
                     __metadata('design:paramtypes', [])
                 ], ConsonantComponent);

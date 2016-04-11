@@ -1,12 +1,10 @@
 ﻿import {Component, OnInit} from "angular2/core";
-import {Button} from 'primeng/primeng';
-import {Dialog} from 'primeng/primeng';
-import {DataTable} from 'primeng/primeng';
-import {Column} from 'primeng/primeng';
+import {Button, Dialog, DataTable, Column, Header, Footer, InputText} from 'primeng/primeng';
 
 @Component({
     selector: "static",
-    templateUrl: "app/components/consonant.html"
+    templateUrl: "app/components/consonant.html",
+    directives: [Button, Dialog, DataTable, Column, Header, Footer, InputText]
 })
 export class ConsonantComponent implements OnInit {
 
