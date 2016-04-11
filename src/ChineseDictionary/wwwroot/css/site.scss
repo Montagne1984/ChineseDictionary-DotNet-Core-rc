@@ -85,4 +85,8 @@ input.ui-inputtext {
             margin-left: 0;
         }
     }
+
+    .fa-search + input {
+        max-width: 60%;
+    }
 }

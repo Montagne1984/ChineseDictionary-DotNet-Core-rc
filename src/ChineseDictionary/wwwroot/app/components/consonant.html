@@ -1,7 +1,7 @@
 ﻿<static>
     <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
         <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
-        <input #gb type="text" pInputText style="float:left" placeholder="Global Filter">
+        <input #gb type="search" pInputText style="float:left" placeholder="Global Filter">
         <button type="button" pButton icon="fa-plus" style="float: right" (click)="showDialogToAdd()" label="Add"></button>
     </div>
     <p-dataTable [value]="consonants" selectionMode="single" [(selection)]="selectedConsonant" (onRowSelect)="onRowSelect($event)" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,20]" [responsive]="true" [globalFilter]="gb" resizableColumns="true">
