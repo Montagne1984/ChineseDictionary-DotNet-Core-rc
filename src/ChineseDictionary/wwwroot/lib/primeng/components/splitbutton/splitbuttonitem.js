@@ -22,7 +22,7 @@ var SplitButtonItem = (function () {
     ], SplitButtonItem.prototype, "label", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], SplitButtonItem.prototype, "url", void 0);
     __decorate([
         core_1.Output(), 

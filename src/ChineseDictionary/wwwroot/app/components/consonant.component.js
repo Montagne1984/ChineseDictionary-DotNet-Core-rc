@@ -25,7 +25,23 @@ System.register(["angular2/core", 'primeng/primeng'], function(exports_1) {
                 }
                 ConsonantComponent.prototype.ngOnInit = function () {
                     //this.consonantService.getCarsSmall().then(consonants => this.consonants = consonants);
-                    this.consonants = [];
+                    this.consonants = [
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" },
+                        { vin: "a", year: "b", brand: "c", color: "d" }
+                    ];
                 };
                 ConsonantComponent.prototype.showDialogToAdd = function () {
                     this.newCar = true;

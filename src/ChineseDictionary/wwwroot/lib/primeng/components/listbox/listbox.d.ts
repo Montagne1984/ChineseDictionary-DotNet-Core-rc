@@ -1,7 +1,8 @@
 import { ElementRef, AfterViewChecked, EventEmitter, TemplateRef, IterableDiffers } from 'angular2/core';
 import { SelectItem } from '../api/selectitem';
 import { DomHandler } from '../dom/domhandler';
-export declare class Listbox implements AfterViewChecked {
+import { ControlValueAccessor } from 'angular2/common';
+export declare class Listbox implements AfterViewChecked, ControlValueAccessor {
     private el;
     private domHandler;
     options: SelectItem[];
@@ -9,14 +10,17 @@ export declare class Listbox implements AfterViewChecked {
     style: string;
     styleClass: string;
     disabled: string;
-    valueChange: EventEmitter<any>;
     onChange: EventEmitter<any>;
     itemTemplate: TemplateRef;
-    _value: any;
+    value: any;
+    onModelChange: Function;
+    onModelTouched: Function;
     differ: any;
     valueChanged: boolean;
-    value: any;
     constructor(el: ElementRef, domHandler: DomHandler, differs: IterableDiffers);
+    writeValue(value: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
     ngDoCheck(): void;
     ngAfterViewChecked(): void;
     preselect(): void;

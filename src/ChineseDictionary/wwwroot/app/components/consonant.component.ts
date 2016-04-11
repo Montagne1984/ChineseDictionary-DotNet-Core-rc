@@ -22,7 +22,23 @@ export class ConsonantComponent implements OnInit {
 
     ngOnInit() {
         //this.consonantService.getCarsSmall().then(consonants => this.consonants = consonants);
-        this.consonants = [];
+        this.consonants = [
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" },
+            { vin: "a", year: "b", brand: "c", color: "d" }
+        ];
     }
 
     showDialogToAdd() {

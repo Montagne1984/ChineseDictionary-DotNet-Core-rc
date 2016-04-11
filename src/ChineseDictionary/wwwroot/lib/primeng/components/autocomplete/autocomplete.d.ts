@@ -1,10 +1,10 @@
 import { ElementRef, AfterViewInit, AfterViewChecked, DoCheck, EventEmitter, TemplateRef, IterableDiffers, Renderer } from 'angular2/core';
 import { DomHandler } from '../dom/domhandler';
-export declare class AutoComplete implements AfterViewInit, DoCheck, AfterViewChecked {
+import { ControlValueAccessor } from 'angular2/common';
+export declare class AutoComplete implements AfterViewInit, DoCheck, AfterViewChecked, ControlValueAccessor {
     private el;
     private domHandler;
     private renderer;
-    value: any;
     minLength: number;
     delay: number;
     style: string;
@@ -18,7 +18,6 @@ export declare class AutoComplete implements AfterViewInit, DoCheck, AfterViewCh
     size: number;
     suggestions: any[];
     completeMethod: EventEmitter<any>;
-    valueChange: EventEmitter<any>;
     onSelect: EventEmitter<any>;
     onUnselect: EventEmitter<any>;
     onDropdownClick: EventEmitter<any>;
@@ -27,6 +26,9 @@ export declare class AutoComplete implements AfterViewInit, DoCheck, AfterViewCh
     dropdown: boolean;
     multiple: boolean;
     itemTemplate: TemplateRef;
+    value: any;
+    onModelChange: Function;
+    onModelTouched: Function;
     timeout: number;
     differ: any;
     panel: any;
@@ -39,6 +41,9 @@ export declare class AutoComplete implements AfterViewInit, DoCheck, AfterViewCh
     ngDoCheck(): void;
     ngAfterViewInit(): void;
     ngAfterViewChecked(): void;
+    writeValue(value: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
     onInput(event: any): void;
     search(event: any, query: string): void;
     onItemMouseover(event: any): void;

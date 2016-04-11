@@ -6,6 +6,7 @@ export declare class DataList implements AfterViewInit, DoCheck {
     rows: number;
     totalRecords: number;
     pageLinks: number;
+    rowsPerPageOptions: number[];
     lazy: boolean;
     onLazyLoad: EventEmitter<any>;
     style: string;
