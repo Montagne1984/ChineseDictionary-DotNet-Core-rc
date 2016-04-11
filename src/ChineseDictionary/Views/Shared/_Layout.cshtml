@@ -97,8 +97,10 @@
         System.import('app/main')
               .then(null, console.error.bind(console));
     </script>
-    <script src="~/lib/rxjs/bundles/Rx.js"></script>
-    <script src="~/lib/angular2/bundles/angular2.dev.js"></script>
+    <environment names="Development">
+        <script src="~/lib/rxjs/bundles/Rx.js"></script>
+        <script src="~/lib/angular2/bundles/angular2.dev.js"></script>
+    </environment>
 
     @RenderSection("scripts", required: false)
 </body>
