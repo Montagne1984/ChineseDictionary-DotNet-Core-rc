@@ -14,6 +14,9 @@ select,
 textarea {
   max-width: 280px; }
 
+a, a:focus, a:hover {
+  text-decoration: none; }
+
 input.ui-inputtext {
   line-height: normal; }
 
@@ -35,6 +38,9 @@ input.ui-inputtext {
 
 .navbar-header:after {
   clear: both; }
+
+.ui-widget {
+  font-size: 90%; }
 
 @media (min-width: 768px) {
   .carousel-caption {
