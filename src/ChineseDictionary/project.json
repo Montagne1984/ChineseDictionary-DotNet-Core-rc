@@ -1,4 +1,4 @@
-﻿{
+{
   "userSecretsId": "aspnet5-ChineseDictionary-47357f4f-8347-411e-8a94-b1ebee7f4723",
   "version": "1.0.0-*",
   "compilationOptions": {
@@ -26,7 +26,8 @@
     "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
-    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc1-final"
+    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc1-final",
+    "Twilio": "4.7.1"
   },
 
   "commands": {
