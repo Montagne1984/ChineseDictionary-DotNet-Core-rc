@@ -14,14 +14,14 @@ export class ConsonantComponent implements OnInit {
 
     selectedConsonant: Consonant;
 
-    newCar: boolean;
+    newConsonant: boolean;
 
     consonants: Consonant[];
 
     constructor() { }
 
     ngOnInit() {
-        //this.consonantService.getCarsSmall().then(consonants => this.consonants = consonants);
+        //this.consonantService.getConsonantsSmall().then(consonants => this.consonants = consonants);
         this.consonants = [
             { vin: "a", year: "b", brand: "c", color: "d" },
             { vin: "a", year: "b", brand: "c", color: "d" },
@@ -42,13 +42,13 @@ export class ConsonantComponent implements OnInit {
     }
 
     showDialogToAdd() {
-        this.newCar = true;
+        this.newConsonant = true;
         this.consonant = new Consonant();
         this.displayDialog = true;
     }
 
     save() {
-        if (this.newCar)
+        if (this.newConsonant)
             this.consonants.push(this.consonant);
         else
             this.consonants[this.findSelectedConsonantIndex()] = this.consonant;
@@ -64,17 +64,17 @@ export class ConsonantComponent implements OnInit {
     }
 
     onRowSelect(event) {
-        this.newCar = false;
-        this.consonant = this.cloneCar(event.data);
+        this.newConsonant = false;
+        this.consonant = this.cloneConsonant(event.data);
         this.displayDialog = true;
     }
 
-    cloneCar(c: Consonant): Consonant {
-        let car = new Consonant();
+    cloneConsonant(c: Consonant): Consonant {
+        let consonant = new Consonant();
         for (let prop in c) {
-            car[prop] = c[prop];
+            consonant[prop] = c[prop];
         }
-        return car;
+        return consonant;
     }
 
     findSelectedConsonantIndex(): number {
