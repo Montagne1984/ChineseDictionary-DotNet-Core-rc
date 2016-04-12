@@ -55,13 +55,13 @@ input.ui-inputtext {
     font-size: 90%;
 }
 
+.nav-item .btn-link {
+    border-width: 0;
+}
+
 @media (min-width: 768px) {
     .carousel-caption {
         z-index: 10 !important;
-    }
-
-    .navbar-header {
-        float: left;
     }
 
     .navbar-collapse.collapse {
