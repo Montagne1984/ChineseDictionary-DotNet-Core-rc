@@ -10,7 +10,7 @@ namespace ChineseDictionary.Models
         public int WordId { get; set; }
         [Required]
         public string Description { get; set; }
-        public string Example { get; set; }
+        public List<WordExample> WordExamples { get; set; }
         public List<WordPronunciationDefinition> WordPronunciationDefinitions { get; set; }
     }
 }

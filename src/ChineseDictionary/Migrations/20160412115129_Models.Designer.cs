@@ -8,7 +8,7 @@ using ChineseDictionary.Models;
 namespace ChineseDictionary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160412090100_Models")]
+    [Migration("20160412115129_Models")]
     partial class Models
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -297,9 +297,20 @@ namespace ChineseDictionary.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
-                    b.Property<string>("Example");
-
                     b.Property<int>("WordId");
+
+                    b.HasKey("Id");
+                });
+
+            modelBuilder.Entity("ChineseDictionary.Models.WordExample", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Sentence")
+                        .IsRequired();
+
+                    b.Property<int>("WordDefinitionId");
 
                     b.HasKey("Id");
                 });
@@ -512,6 +523,13 @@ namespace ChineseDictionary.Migrations
                     b.HasOne("ChineseDictionary.Models.Word")
                         .WithMany()
                         .HasForeignKey("WordId");
+                });
+
+            modelBuilder.Entity("ChineseDictionary.Models.WordExample", b =>
+                {
+                    b.HasOne("ChineseDictionary.Models.WordDefinition")
+                        .WithMany()
+                        .HasForeignKey("WordDefinitionId");
                 });
 
             modelBuilder.Entity("ChineseDictionary.Models.WordLabel", b =>

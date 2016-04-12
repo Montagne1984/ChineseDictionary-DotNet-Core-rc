@@ -213,7 +213,6 @@ namespace ChineseDictionary.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(nullable: false),
-                    Example = table.Column<string>(nullable: true),
                     WordId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -302,6 +301,25 @@ namespace ChineseDictionary.Migrations
                         principalTable: "ToneType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+            migrationBuilder.CreateTable(
+                name: "WordExample",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Sentence = table.Column<string>(nullable: false),
+                    WordDefinitionId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WordExample", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WordExample_WordDefinition_WordDefinitionId",
+                        column: x => x.WordDefinitionId,
+                        principalTable: "WordDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
             migrationBuilder.CreateTable(
                 name: "WordPronunciationDefinition",
@@ -472,6 +490,7 @@ namespace ChineseDictionary.Migrations
             migrationBuilder.DropTable("ConsonantMapping");
             migrationBuilder.DropTable("VowelMapping");
             migrationBuilder.DropTable("WordCharacterPronunciation");
+            migrationBuilder.DropTable("WordExample");
             migrationBuilder.DropTable("WordLabel");
             migrationBuilder.DropTable("WordPronunciationDefinition");
             migrationBuilder.DropTable("IPAConsonant");
