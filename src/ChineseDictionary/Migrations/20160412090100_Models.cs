@@ -213,6 +213,7 @@ namespace ChineseDictionary.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(nullable: false),
+                    Example = table.Column<string>(nullable: true),
                     WordId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

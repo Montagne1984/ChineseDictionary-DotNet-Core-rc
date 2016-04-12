@@ -8,7 +8,7 @@ using ChineseDictionary.Models;
 namespace ChineseDictionary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160407085836_Models")]
+    [Migration("20160412090100_Models")]
     partial class Models
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -296,6 +296,8 @@ namespace ChineseDictionary.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired();
+
+                    b.Property<string>("Example");
 
                     b.Property<int>("WordId");
 

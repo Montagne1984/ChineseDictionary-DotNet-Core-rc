@@ -296,6 +296,8 @@ namespace ChineseDictionary.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
+                    b.Property<string>("Example");
+
                     b.Property<int>("WordId");
 
                     b.HasKey("Id");
