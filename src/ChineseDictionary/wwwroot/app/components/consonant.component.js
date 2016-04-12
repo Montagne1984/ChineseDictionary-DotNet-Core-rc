@@ -24,7 +24,7 @@ System.register(["angular2/core", 'primeng/primeng'], function(exports_1) {
                     this.consonant = new Consonant();
                 }
                 ConsonantComponent.prototype.ngOnInit = function () {
-                    //this.consonantService.getCarsSmall().then(consonants => this.consonants = consonants);
+                    //this.consonantService.getConsonantsSmall().then(consonants => this.consonants = consonants);
                     this.consonants = [
                         { vin: "a", year: "b", brand: "c", color: "d" },
                         { vin: "a", year: "b", brand: "c", color: "d" },
@@ -44,12 +44,12 @@ System.register(["angular2/core", 'primeng/primeng'], function(exports_1) {
                     ];
                 };
                 ConsonantComponent.prototype.showDialogToAdd = function () {
-                    this.newCar = true;
+                    this.newConsonant = true;
                     this.consonant = new Consonant();
                     this.displayDialog = true;
                 };
                 ConsonantComponent.prototype.save = function () {
-                    if (this.newCar)
+                    if (this.newConsonant)
                         this.consonants.push(this.consonant);
                     else
                         this.consonants[this.findSelectedConsonantIndex()] = this.consonant;
@@ -62,16 +62,16 @@ System.register(["angular2/core", 'primeng/primeng'], function(exports_1) {
                     this.displayDialog = false;
                 };
                 ConsonantComponent.prototype.onRowSelect = function (event) {
-                    this.newCar = false;
-                    this.consonant = this.cloneCar(event.data);
+                    this.newConsonant = false;
+                    this.consonant = this.cloneConsonant(event.data);
                     this.displayDialog = true;
                 };
-                ConsonantComponent.prototype.cloneCar = function (c) {
-                    var car = new Consonant();
+                ConsonantComponent.prototype.cloneConsonant = function (c) {
+                    var consonant = new Consonant();
                     for (var prop in c) {
-                        car[prop] = c[prop];
+                        consonant[prop] = c[prop];
                     }
-                    return car;
+                    return consonant;
                 };
                 ConsonantComponent.prototype.findSelectedConsonantIndex = function () {
                     return this.consonants.indexOf(this.selectedConsonant);
