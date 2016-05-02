@@ -8,41 +8,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('angular2/core');
-var common_1 = require('angular2/common');
-var lang_1 = require('angular2/src/facade/lang');
-var CHECKBOX_VALUE_ACCESSOR = lang_1.CONST_EXPR(new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
-    useExisting: core_1.forwardRef(function () { return Checkbox; }),
-    multi: true
-}));
 var Checkbox = (function () {
     function Checkbox() {
         this.onChange = new core_1.EventEmitter();
-        this.onModelChange = function () { };
-        this.onModelTouched = function () { };
-        this.checked = false;
+        this.modelChange = new core_1.EventEmitter();
+        this.checkedChange = new core_1.EventEmitter();
     }
-    Checkbox.prototype.onClick = function () {
+    Checkbox.prototype.onClick = function (input) {
         if (this.disabled) {
             return;
         }
-        this.checked = !this.checked;
-        if (this.name) {
-            if (this.checked)
-                this.addValue(this.value);
+        this.onChange.next(!input.checked);
+        if (this.model) {
+            if (!input.checked)
+                this.addValue(input.value);
             else
-                this.removeValue(this.value);
-            this.onModelChange(this.model);
+                this.removeValue(input.value);
+            this.modelChange.next(this.model);
         }
         else {
-            this.onModelChange(this.checked);
+            this.checkedChange.next(!input.checked);
         }
-        this.onChange.emit(this.checked);
     };
-    Checkbox.prototype.isChecked = function () {
-        if (this.name)
-            return this.findValueIndex(this.value) !== -1;
+    Checkbox.prototype.isChecked = function (value) {
+        if (this.model)
+            return this.findValueIndex(value) !== -1;
         else
-            return this.model;
+            return this.checked;
     };
     Checkbox.prototype.removeValue = function (value) {
         var index = this.findValueIndex(value);
@@ -65,16 +57,6 @@ var Checkbox = (function () {
         }
         return index;
     };
-    Checkbox.prototype.writeValue = function (model) {
-        this.model = model;
-        this.checked = this.isChecked();
-    };
-    Checkbox.prototype.registerOnChange = function (fn) {
-        this.onModelChange = fn;
-    };
-    Checkbox.prototype.registerOnTouched = function (fn) {
-        this.onModelTouched = fn;
-    };
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Object)
@@ -88,14 +70,29 @@ var Checkbox = (function () {
         __metadata('design:type', Boolean)
     ], Checkbox.prototype, "disabled", void 0);
     __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], Checkbox.prototype, "model", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], Checkbox.prototype, "checked", void 0);
+    __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], Checkbox.prototype, "onChange", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], Checkbox.prototype, "modelChange", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], Checkbox.prototype, "checkedChange", void 0);
     Checkbox = __decorate([
         core_1.Component({
             selector: 'p-checkbox',
-            template: "\n        <div class=\"ui-chkbox ui-widget\">\n            <div class=\"ui-helper-hidden-accessible\">\n                <input #cb type=\"checkbox\" name=\"{{name}}\" value=\"{{value}}\" [checked]=\"checked\" (blur)=\"onModelTouched()\">\n            </div>\n            <div class=\"ui-chkbox-box ui-widget ui-corner-all ui-state-default\" (click)=\"onClick()\"\n                        (mouseover)=\"hover=true\" (mouseout)=\"hover=false\" \n                        [ngClass]=\"{'ui-state-hover':hover&&!disabled,'ui-state-active':checked,'ui-state-disabled':disabled}\">\n                <span class=\"ui-chkbox-icon ui-c\" [ngClass]=\"{'fa fa-fw fa-check':checked}\"></span>\n            </div>\n        </div>\n    ",
-            providers: [CHECKBOX_VALUE_ACCESSOR]
+            template: "\n        <div class=\"ui-chkbox ui-widget\">\n            <div class=\"ui-helper-hidden-accessible\">\n                <input #cb type=\"checkbox\" name=\"{{name}}\" value=\"{{value}}\" [checked]=\"isChecked(cb.value)\"/>\n            </div>\n            <div class=\"ui-chkbox-box ui-widget ui-corner-all ui-state-default\" (click)=\"onClick(cb)\"\n                        (mouseover)=\"hover=true\" (mouseout)=\"hover=false\" \n                        [ngClass]=\"{'ui-state-hover':hover&&!disabled,'ui-state-active':cb.checked,'ui-state-disabled':disabled}\">\n                <span class=\"ui-chkbox-icon ui-c\" [ngClass]=\"{'fa fa-fw fa-check':cb.checked}\"></span>\n            </div>\n        </div>\n    "
         }), 
         __metadata('design:paramtypes', [])
     ], Checkbox);

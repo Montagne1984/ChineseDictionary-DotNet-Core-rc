@@ -1,21 +1,18 @@
-import { ElementRef, AfterViewInit, OnDestroy, OnChanges, SimpleChange, EventEmitter } from 'angular2/core';
-export declare class InputSwitch implements AfterViewInit, OnDestroy, OnChanges {
+import { ElementRef, AfterContentInit, OnDestroy, OnChanges, SimpleChange, EventEmitter } from 'angular2/core';
+export declare class InputSwitch implements AfterContentInit, OnDestroy, OnChanges {
     private el;
     onLabel: string;
     offLabel: string;
+    checked: boolean;
     style: string;
     styleClass: string;
     onChange: EventEmitter<any>;
-    value: boolean;
-    onModelChange: Function;
-    onModelTouched: Function;
+    checkedChange: EventEmitter<any>;
     initialized: boolean;
+    stopNgOnChangesPropagation: boolean;
     inputSwitchElement: any;
     constructor(el: ElementRef);
-    ngAfterViewInit(): void;
-    writeValue(value: any): void;
-    registerOnChange(fn: Function): void;
-    registerOnTouched(fn: Function): void;
+    ngAfterContentInit(): void;
     ngOnChanges(changes: {
         [key: string]: SimpleChange;
     }): void;

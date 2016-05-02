@@ -86,7 +86,7 @@ var PolarAreaChart = (function () {
         if (this.chart) {
             var segs = this.chart.getSegmentsAtEvent(event);
             if (segs) {
-                this.onSegmentsSelect.emit({ originalEvent: event, segments: segs });
+                this.onSegmentsSelect.next({ originalEvent: event, segments: segs });
             }
         }
     };
@@ -145,12 +145,6 @@ var PolarAreaChart = (function () {
                 this.legend.innerHTML = this.chart.generateLegend();
             }
         }
-    };
-    PolarAreaChart.prototype.getCanvas = function () {
-        return this.el.nativeElement.children[0].children[0];
-    };
-    PolarAreaChart.prototype.getBase64Image = function () {
-        return this.chart.toBase64Image();
     };
     __decorate([
         core_1.Input(), 

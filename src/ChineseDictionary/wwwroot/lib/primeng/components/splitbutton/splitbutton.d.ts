@@ -1,13 +1,10 @@
 import { ElementRef, OnInit, OnDestroy, EventEmitter, QueryList, Renderer } from 'angular2/core';
 import { SplitButtonItem } from './splitbuttonitem';
 import { DomHandler } from '../dom/domhandler';
-import { Router, Location } from 'angular2/router';
 export declare class SplitButton implements OnInit, OnDestroy {
     private el;
     private domHandler;
     private renderer;
-    private router;
-    private location;
     icon: string;
     iconPos: string;
     label: string;
@@ -26,11 +23,10 @@ export declare class SplitButton implements OnInit, OnDestroy {
     private hoveredItem;
     private menuVisible;
     private documentClickListener;
-    constructor(el: ElementRef, domHandler: DomHandler, renderer: Renderer, router: Router, location: Location);
+    constructor(el: ElementRef, domHandler: DomHandler, renderer: Renderer);
     ngOnInit(): void;
     onDefaultButtonClick(event: any): void;
     onDropdownClick(event: any, menu: any, defaultbtn: any): void;
     onItemClick(event: any, item: SplitButtonItem): void;
-    getItemUrl(item: SplitButtonItem): string;
     ngOnDestroy(): void;
 }

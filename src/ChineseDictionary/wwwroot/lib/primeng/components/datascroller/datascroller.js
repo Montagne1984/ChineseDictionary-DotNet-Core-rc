@@ -47,7 +47,7 @@ var DataScroller = (function () {
     };
     DataScroller.prototype.load = function () {
         if (this.lazy) {
-            this.onLazyLoad.emit({
+            this.onLazyLoad.next({
                 first: this.first,
                 rows: this.rows
             });

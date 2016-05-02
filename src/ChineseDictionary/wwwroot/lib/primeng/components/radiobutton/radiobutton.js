@@ -8,32 +8,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('angular2/core');
-var common_1 = require('angular2/common');
-var lang_1 = require('angular2/src/facade/lang');
-var RADIO_VALUE_ACCESSOR = lang_1.CONST_EXPR(new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
-    useExisting: core_1.forwardRef(function () { return RadioButton; }),
-    multi: true
-}));
 var RadioButton = (function () {
     function RadioButton() {
         this.click = new core_1.EventEmitter();
-        this.onModelChange = function () { };
-        this.onModelTouched = function () { };
+        this.modelChange = new core_1.EventEmitter();
     }
     RadioButton.prototype.onclick = function () {
-        this.click.emit(null);
-        this.checked = true;
-        this.onModelChange(this.value);
+        this.click.next(null);
+        this.modelChange.next(this.value);
     };
-    RadioButton.prototype.writeValue = function (model) {
-        this.model = model;
-        this.checked = (this.model == this.value);
-    };
-    RadioButton.prototype.registerOnChange = function (fn) {
-        this.onModelChange = fn;
-    };
-    RadioButton.prototype.registerOnTouched = function (fn) {
-        this.onModelTouched = fn;
+    RadioButton.prototype.isChecked = function () {
+        return this.value == this.model;
     };
     __decorate([
         core_1.Input(), 
@@ -48,14 +33,21 @@ var RadioButton = (function () {
         __metadata('design:type', Boolean)
     ], RadioButton.prototype, "disabled", void 0);
     __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], RadioButton.prototype, "model", void 0);
+    __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], RadioButton.prototype, "click", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], RadioButton.prototype, "modelChange", void 0);
     RadioButton = __decorate([
         core_1.Component({
-            selector: 'p-radioButton',
-            template: "\n        <div class=\"ui-radiobutton ui-widget\">\n            <div class=\"ui-helper-hidden-accessible\">\n                <input type=\"radio\" [attr.name]=\"name\" [attr.value]=\"value\" [checked]=\"checked\" (blur)=\"onModelTouched()\">\n            </div>\n            <div class=\"ui-radiobutton-box ui-widget ui-radiobutton-relative ui-state-default\" (click)=\"onclick()\"\n                        (mouseover)=\"hover=true\" (mouseout)=\"hover=false\" [ngClass]=\"{'ui-state-hover':hover,'ui-state-active':checked,'ui-state-disabled':disabled}\">\n                <span class=\"ui-radiobutton-icon\" [ngClass]=\"{'fa fa-fw fa-circle':checked}\"></span>\n            </div>\n        </div>\n    ",
-            providers: [RADIO_VALUE_ACCESSOR]
+            selector: 'p-radio',
+            template: "\n        <div class=\"ui-radiobutton ui-widget\">\n            <div class=\"ui-helper-hidden-accessible\">\n                <input type=\"radio\" [attr.name]=\"name\" [attr.value]=\"value\" [checked]=\"isChecked()\"/>\n            </div>\n            <div class=\"ui-radiobutton-box ui-widget ui-radiobutton-relative ui-state-default\" (click)=\"onclick()\"\n                        (mouseover)=\"hover=true\" (mouseout)=\"hover=false\" [ngClass]=\"{'ui-state-hover':hover,'ui-state-active':isChecked(),'ui-state-disabled':disabled}\">\n                <span class=\"ui-radiobutton-icon\" [ngClass]=\"{'fa fa-fw fa-circle':isChecked()}\"></span>\n            </div>\n        </div>\n    "
         }), 
         __metadata('design:paramtypes', [])
     ], RadioButton);

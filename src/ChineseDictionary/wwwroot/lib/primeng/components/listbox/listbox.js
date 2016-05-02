@@ -9,33 +9,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('angular2/core');
 var domhandler_1 = require('../dom/domhandler');
-var common_1 = require('angular2/common');
-var lang_1 = require('angular2/src/facade/lang');
-var LISTBOX_VALUE_ACCESSOR = lang_1.CONST_EXPR(new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
-    useExisting: core_1.forwardRef(function () { return Listbox; }),
-    multi: true
-}));
 var Listbox = (function () {
     function Listbox(el, domHandler, differs) {
         this.el = el;
         this.domHandler = domHandler;
+        this.valueChange = new core_1.EventEmitter();
         this.onChange = new core_1.EventEmitter();
-        this.onModelChange = function () { };
-        this.onModelTouched = function () { };
         this.differ = differs.find([]).create(null);
     }
-    Listbox.prototype.writeValue = function (value) {
-        this.value = value;
-        if (!this.multiple) {
-            this.valueChanged = true;
-        }
-    };
-    Listbox.prototype.registerOnChange = function (fn) {
-        this.onModelChange = fn;
-    };
-    Listbox.prototype.registerOnTouched = function (fn) {
-        this.onModelTouched = fn;
-    };
+    Object.defineProperty(Listbox.prototype, "value", {
+        get: function () {
+            return this._value;
+        },
+        set: function (val) {
+            this._value = val;
+            if (!this.multiple) {
+                this.valueChanged = true;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Listbox.prototype.ngDoCheck = function () {
         if (this.multiple) {
             var changes = this.differ.diff(this.value);
@@ -137,20 +131,18 @@ var Listbox = (function () {
                     valueArr.push(this.options[itemIndex].value);
                 }
             }
-            this.value = valueArr;
+            this.valueChange.next(valueArr);
         }
         else {
             var selectedItem = this.domHandler.findSingle(item.parentNode, 'li.ui-state-highlight');
             if (selectedItem) {
                 var selectedIndex = this.domHandler.index(selectedItem);
-                this.value = this.options[selectedIndex].value;
+                this.valueChange.next(this.options[selectedIndex].value);
             }
             else {
-                this.value = null;
+                this.valueChange.next(null);
             }
         }
-        this.onModelChange(this.value);
-        this.onChange.emit(event);
     };
     Listbox.prototype.unselectSiblings = function (item) {
         var siblings = this.domHandler.siblings(item);
@@ -196,16 +188,24 @@ var Listbox = (function () {
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
+    ], Listbox.prototype, "valueChange", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
     ], Listbox.prototype, "onChange", void 0);
     __decorate([
         core_1.ContentChild(core_1.TemplateRef), 
         __metadata('design:type', core_1.TemplateRef)
     ], Listbox.prototype, "itemTemplate", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], Listbox.prototype, "value", null);
     Listbox = __decorate([
         core_1.Component({
             selector: 'p-listbox',
-            template: "\n        <div [ngClass]=\"{'ui-listbox ui-inputtext ui-widget ui-widget-content ui-corner-all':true,'ui-state-disabled':disabled}\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <ul class=\"ui-listbox-list\" *ngIf=\"!itemTemplate\" (mouseover)=\"onMouseover($event)\" (mouseout)=\"onMouseout($event)\" (click)=\"onClick($event)\">\n                <li *ngFor=\"#option of options\" class=\"ui-listbox-item ui-corner-all\">\n                    {{option.label}}\n                </li>\n            </ul>\n            <ul class=\"ui-listbox-list\" *ngIf=\"itemTemplate\" (mouseover)=\"onMouseover($event)\" (mouseout)=\"onMouseout($event)\" (click)=\"onClick($event)\">\n                <template ngFor [ngForOf]=\"options\" [ngForTemplate]=\"itemTemplate\"></template>\n            </ul>\n        </div>\n    ",
-            providers: [domhandler_1.DomHandler, LISTBOX_VALUE_ACCESSOR]
+            template: "\n        <div [ngClass]=\"{'ui-listbox ui-inputfield ui-inputtext ui-widget ui-widget-content ui-corner-all':true,'ui-state-disabled':disabled}\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <ul class=\"ui-listbox-list\" *ngIf=\"!itemTemplate\" (mouseover)=\"onMouseover($event)\" (mouseout)=\"onMouseout($event)\" (click)=\"onClick($event)\">\n                <li *ngFor=\"#option of options\" class=\"ui-listbox-item ui-corner-all\">\n                    {{option.label}}\n                </li>\n            </ul>\n            <ul class=\"ui-listbox-list\" *ngIf=\"itemTemplate\" (mouseover)=\"onMouseover($event)\" (mouseout)=\"onMouseout($event)\" (click)=\"onClick($event)\">\n                <template ngFor [ngForOf]=\"options\" [ngForTemplate]=\"itemTemplate\"></template>\n            </ul>\n        </div>\n    ",
+            providers: [domhandler_1.DomHandler]
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, domhandler_1.DomHandler, core_1.IterableDiffers])
     ], Listbox);

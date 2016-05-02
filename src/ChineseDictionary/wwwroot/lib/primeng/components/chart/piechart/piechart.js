@@ -82,7 +82,7 @@ var PieChart = (function () {
         if (this.chart) {
             var segs = this.chart.getSegmentsAtEvent(event);
             if (segs) {
-                this.onSegmentsSelect.emit({ originalEvent: event, segments: segs });
+                this.onSegmentsSelect.next({ originalEvent: event, segments: segs });
             }
         }
     };
@@ -138,12 +138,6 @@ var PieChart = (function () {
                 this.legend.innerHTML = this.chart.generateLegend();
             }
         }
-    };
-    PieChart.prototype.getCanvas = function () {
-        return this.el.nativeElement.children[0].children[0];
-    };
-    PieChart.prototype.getBase64Image = function () {
-        return this.chart.toBase64Image();
     };
     __decorate([
         core_1.Input(), 

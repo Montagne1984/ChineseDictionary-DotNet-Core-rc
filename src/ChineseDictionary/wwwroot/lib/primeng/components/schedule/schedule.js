@@ -75,49 +75,49 @@ var Schedule = (function () {
                 callback(_this.events);
             },
             dayClick: function (date, jsEvent, view) {
-                _this.onDayClick.emit({
+                _this.onDayClick.next({
                     'date': date,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventClick: function (calEvent, jsEvent, view) {
-                _this.onEventClick.emit({
+                _this.onEventClick.next({
                     'calEvent': calEvent,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventMouseover: function (calEvent, jsEvent, view) {
-                _this.onEventMouseover.emit({
+                _this.onEventMouseover.next({
                     'calEvent': calEvent,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventMouseout: function (calEvent, jsEvent, view) {
-                _this.onEventMouseover.emit({
+                _this.onEventMouseover.next({
                     'calEvent': calEvent,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventDragStart: function (event, jsEvent, ui, view) {
-                _this.onEventDragStart.emit({
+                _this.onEventDragStart.next({
                     'event': event,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventDragStop: function (event, jsEvent, ui, view) {
-                _this.onEventDragStop.emit({
+                _this.onEventDragStop.next({
                     'event': event,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
-                _this.onEventDragStop.emit({
+                _this.onEventDragStop.next({
                     'event': event,
                     'delta': delta,
                     'revertFunc': revertFunc,
@@ -126,21 +126,21 @@ var Schedule = (function () {
                 });
             },
             eventResizeStart: function (event, jsEvent, ui, view) {
-                _this.onEventResizeStart.emit({
+                _this.onEventResizeStart.next({
                     'event': event,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventResizeStop: function (event, jsEvent, ui, view) {
-                _this.onEventResizeStop.emit({
+                _this.onEventResizeStop.next({
                     'event': event,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-                _this.onEventResize.emit({
+                _this.onEventResize.next({
                     'event': event,
                     'delta': delta,
                     'revertFunc': revertFunc,

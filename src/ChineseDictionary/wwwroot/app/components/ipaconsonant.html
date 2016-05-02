@@ -1,0 +1,57 @@
+﻿<static>
+    <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+        <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
+        <input #gb type="search" pInputText style="float:left" placeholder="Global Filter">
+        <button type="button" pButton icon="fa-plus" style="float: right" (click)="showDialogToAdd()" label="Add"></button>
+    </div>
+    <p-dataTable [value]="items" selectionMode="single" [(selection)]="selectedItem" (onRowSelect)="onRowSelect($event)" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,20]" [responsive]="true" [globalFilter]="gb" resizableColumns="true">
+        <header>CRUD for Items</header>
+        <p-column field="vin" header="Vin" [sortable]="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="year" header="Year" [sortable]="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="brand" header="Brand" [sortable]="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="color" header="Color" [sortable]="true" [filter]="true" filterMatchMode="contains"></p-column>
+    </p-dataTable>
+
+    <p-dialog header="Item Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="item">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="vin">Vin</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText id="vin" [(ngModel)]="item.vin" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="brand">Year</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText id="year" [(ngModel)]="item.year" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="brand">Brand</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText id="brand" [(ngModel)]="item.brand" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="color">Color</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText id="color" [(ngModel)]="item.color" />
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <button type="button" pButton icon="fa-close" (click)="delete()" label="Delete" [hidden]="newItem"></button>
+                <button type="button" pButton icon="fa-check" (click)="save()" label="Save"></button>
+            </div>
+        </footer>
+    </p-dialog>
+</static>

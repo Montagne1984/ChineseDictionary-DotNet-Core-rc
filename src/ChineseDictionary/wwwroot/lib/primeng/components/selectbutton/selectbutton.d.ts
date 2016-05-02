@@ -1,20 +1,15 @@
 import { EventEmitter } from 'angular2/core';
 import { SelectItem } from '../api/selectitem';
-import { ControlValueAccessor } from 'angular2/common';
-export declare class SelectButton implements ControlValueAccessor {
+export declare class SelectButton {
     options: SelectItem[];
     tabindex: number;
     multiple: boolean;
+    value: any;
     style: string;
     styleClass: string;
+    valueChange: EventEmitter<any>;
     onChange: EventEmitter<any>;
-    value: any;
-    onModelChange: Function;
-    onModelTouched: Function;
     private hoveredItem;
-    writeValue(value: any): void;
-    registerOnChange(fn: Function): void;
-    registerOnTouched(fn: Function): void;
     onItemClick(event: any, option: SelectItem): void;
     isSelected(option: SelectItem): boolean;
     findItemIndex(option: SelectItem): number;

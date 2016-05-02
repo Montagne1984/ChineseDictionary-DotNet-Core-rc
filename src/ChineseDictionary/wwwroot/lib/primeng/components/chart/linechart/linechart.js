@@ -98,7 +98,7 @@ var LineChart = (function () {
         if (this.chart) {
             var activePoints = this.chart.getPointsAtEvent(event);
             if (activePoints) {
-                this.onPointsSelect.emit({ originalEvent: event, points: activePoints });
+                this.onPointsSelect.next({ originalEvent: event, points: activePoints });
             }
         }
     };
@@ -161,12 +161,6 @@ var LineChart = (function () {
                 this.legend.innerHTML = this.chart.generateLegend();
             }
         }
-    };
-    LineChart.prototype.getCanvas = function () {
-        return this.el.nativeElement.children[0].children[0];
-    };
-    LineChart.prototype.getBase64Image = function () {
-        return this.chart.toBase64Image();
     };
     __decorate([
         core_1.Input(), 

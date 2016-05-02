@@ -6,7 +6,6 @@ export declare class Paginator {
     onPageChange: EventEmitter<any>;
     style: string;
     styleClass: string;
-    rowsPerPageOptions: number[];
     pageLinks: number[];
     _totalRecords: number;
     totalRecords: number;
@@ -21,5 +20,4 @@ export declare class Paginator {
     changePageToPrev(): void;
     changePageToNext(): void;
     changePageToLast(): void;
-    onRppChange(event: any): void;
 }

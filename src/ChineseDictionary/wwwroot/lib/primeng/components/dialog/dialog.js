@@ -45,20 +45,20 @@ var Dialog = (function () {
             minimizable: this.minimizable,
             maximizable: this.maximizable,
             responsive: this.responsive,
-            beforeShow: this.onBeforeShow ? function (event) { _this.onBeforeShow.emit(event); } : null,
-            afterShow: this.onAfterShow ? function (event) { _this.onAfterShow.emit(event); } : null,
-            beforeHide: this.onBeforeHide ? function (event) { _this.onBeforeHide.emit(event); } : null,
-            afterHide: this.onAfterHide ? function (event) { _this.onAfterHide.emit(event); } : null,
+            beforeShow: this.onBeforeShow ? function (event) { _this.onBeforeShow.next(event); } : null,
+            afterShow: this.onAfterShow ? function (event) { _this.onAfterShow.next(event); } : null,
+            beforeHide: this.onBeforeHide ? function (event) { _this.onBeforeHide.next(event); } : null,
+            afterHide: this.onAfterHide ? function (event) { _this.onAfterHide.next(event); } : null,
             clickClose: function (event) {
                 _this.stopNgOnChangesPropagation = true;
-                _this.visibleChange.emit(false);
+                _this.visibleChange.next(false);
             },
             hideWithEscape: function (event) {
                 _this.stopNgOnChangesPropagation = true;
-                _this.visibleChange.emit(false);
+                _this.visibleChange.next(false);
             },
-            minimize: this.onMinimize ? function (event) { _this.onMinimize.emit(event); } : null,
-            maximize: this.onMaximize ? function (event) { _this.onMaximize.emit(event); } : null,
+            minimize: this.onMinimize ? function (event) { _this.onMinimize.next(event); } : null,
+            maximize: this.onMaximize ? function (event) { _this.onMaximize.next(event); } : null,
             enhanced: true
         });
         this.initialized = true;

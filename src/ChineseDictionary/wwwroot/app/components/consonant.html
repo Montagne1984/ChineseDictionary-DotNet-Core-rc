@@ -6,6 +6,7 @@
     </div>
     <p-dataTable [value]="consonants" selectionMode="single" [(selection)]="selectedConsonant" (onRowSelect)="onRowSelect($event)" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,20]" [responsive]="true" [globalFilter]="gb" resizableColumns="true">
         <header>CRUD for Consonants</header>
+        <!--<p-column *ngFor="prop in consonants" [field]="prop" [header]="prop" [sortable]="true" [filter]="true" filterMatchMode="contains"></p-column>-->
         <p-column field="vin" header="Vin" [sortable]="true" [filter]="true" filterMatchMode="contains"></p-column>
         <p-column field="year" header="Year" [sortable]="true" [filter]="true" filterMatchMode="contains"></p-column>
         <p-column field="brand" header="Brand" [sortable]="true" [filter]="true" filterMatchMode="contains"></p-column>
@@ -14,13 +15,13 @@
 
     <p-dialog header="Consonant Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true">
         <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="consonant">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-4"><label for="vin">Vin</label>
+            <div *ngFor="prop in item" class="ui-grid-row">
+                <div class="ui-grid-col-4"><label [for]="prop">prop</label>
                 </div>
-                <div class="ui-grid-col-8"><input pInputText id="vin" [(ngModel)]="consonant.vin"/>
+                <div class="ui-grid-col-8"><input pInputText [id]="prop" [(ngModel)]="item[prop]"/>
                 </div>
             </div>
-            <div class="ui-grid-row">
+            <!--<div class="ui-grid-row">
                 <div class="ui-grid-col-4"><label for="brand">Year</label>
                 </div>
                 <div class="ui-grid-col-8"><input pInputText id="year" [(ngModel)]="consonant.year"/>
@@ -37,7 +38,7 @@
                 </div>
                 <div class="ui-grid-col-8"><input pInputText id="color" [(ngModel)]="consonant.color"/>
                 </div>
-            </div>
+            </div>-->
         </div>
         <footer>
             <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">

@@ -8,18 +8,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('angular2/core');
-var common_1 = require('angular2/common');
-var lang_1 = require('angular2/src/facade/lang');
-var SLIDER_VALUE_ACCESSOR = lang_1.CONST_EXPR(new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
-    useExisting: core_1.forwardRef(function () { return Slider; }),
-    multi: true
-}));
 var Slider = (function () {
     function Slider(el) {
         this.el = el;
         this.onChange = new core_1.EventEmitter();
-        this.onModelChange = function () { };
-        this.onModelTouched = function () { };
+        this.valueChange = new core_1.EventEmitter();
+        this.valuesChange = new core_1.EventEmitter();
         this.initialized = false;
     }
     Slider.prototype.ngAfterViewInit = function () {
@@ -33,36 +27,28 @@ var Slider = (function () {
             range: this.range,
             step: this.step,
             value: this.value,
-            values: this.value,
+            values: this.values,
             slide: function (event, ui) {
+                _this.stopNgOnChangesPropagation = true;
                 if (_this.range) {
-                    _this.onModelChange(ui.value);
                     _this.onChange.emit({ originalEvent: event, values: ui.values });
+                    _this.valuesChange.emit(ui.values);
                 }
                 else {
-                    _this.onModelChange(ui.value);
                     _this.onChange.emit({ originalEvent: event, value: ui.value });
+                    _this.valueChange.emit(ui.value);
                 }
             }
         });
         this.initialized = true;
     };
-    Slider.prototype.writeValue = function (value) {
-        this.value = value;
-        if (this.initialized) {
-            var optionName = this.range ? 'values' : 'value';
-            jQuery(this.el.nativeElement.children[0]).slider('option', optionName, this.value);
-        }
-    };
-    Slider.prototype.registerOnChange = function (fn) {
-        this.onModelChange = fn;
-    };
-    Slider.prototype.registerOnTouched = function (fn) {
-        this.onModelTouched = fn;
-    };
     Slider.prototype.ngOnChanges = function (changes) {
         if (this.initialized) {
             for (var key in changes) {
+                if ((key === 'value' || key === 'values') && this.stopNgOnChangesPropagation) {
+                    this.stopNgOnChangesPropagation = false;
+                    continue;
+                }
                 jQuery(this.el.nativeElement.children[0]).slider('option', key, changes[key].currentValue);
             }
         }
@@ -94,6 +80,14 @@ var Slider = (function () {
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Number)
+    ], Slider.prototype, "value", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Array)
+    ], Slider.prototype, "values", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Number)
     ], Slider.prototype, "step", void 0);
     __decorate([
         core_1.Input(), 
@@ -111,11 +105,18 @@ var Slider = (function () {
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], Slider.prototype, "onChange", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], Slider.prototype, "valueChange", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], Slider.prototype, "valuesChange", void 0);
     Slider = __decorate([
         core_1.Component({
             selector: 'p-slider',
-            template: "\n        <div [attr.style]=\"style\" [attr.class]=\"styleClass\"></div>\n    ",
-            providers: [SLIDER_VALUE_ACCESSOR]
+            template: "\n        <div [attr.style]=\"style\" [attr.class]=\"styleClass\"></div>\n    "
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef])
     ], Slider);
