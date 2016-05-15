@@ -15,15 +15,10 @@ export declare class OverlayPanel implements OnInit, OnDestroy {
     visible: boolean;
     hoverCloseIcon: boolean;
     documentClickListener: any;
-    selfClick: boolean;
-    targetEvent: boolean;
-    target: any;
     constructor(el: ElementRef, domHandler: DomHandler, renderer: Renderer);
     ngOnInit(): void;
-    toggle(event: any, target?: any): void;
     show(event: any, target?: any): void;
     hide(): void;
-    onPanelClick(): void;
     onCloseClick(event: any): void;
     ngOnDestroy(): void;
 }

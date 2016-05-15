@@ -30,24 +30,24 @@ var TreeTable = (function () {
             var selected = (index >= 0);
             if (selected && metaKey) {
                 if (this.isSingleSelectionMode()) {
-                    this.selectionChange.emit(null);
+                    this.selectionChange.next(null);
                 }
                 else {
                     this.selection.splice(index, 1);
-                    this.selectionChange.emit(this.selection);
+                    this.selectionChange.next(this.selection);
                 }
-                this.onNodeUnselect.emit({ originalEvent: event, node: node });
+                this.onNodeUnselect.next({ originalEvent: event, node: node });
             }
             else {
                 if (this.isSingleSelectionMode()) {
-                    this.selectionChange.emit(node);
+                    this.selectionChange.next(node);
                 }
                 else if (this.isMultipleSelectionMode()) {
                     this.selection = (!event.metaKey) ? [] : this.selection || [];
                     this.selection.push(node);
-                    this.selectionChange.emit(this.selection);
+                    this.selectionChange.next(this.selection);
                 }
-                this.onNodeSelect.emit({ originalEvent: event, node: node });
+                this.onNodeSelect.next({ originalEvent: event, node: node });
             }
         }
     };

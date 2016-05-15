@@ -25,35 +25,12 @@ var OverlayPanel = (function () {
         var _this = this;
         if (this.dismissable) {
             this.documentClickListener = this.renderer.listenGlobal('body', 'click', function () {
-                if (!_this.selfClick && !_this.targetEvent) {
-                    _this.hide();
-                }
-                _this.selfClick = false;
-                _this.targetEvent = false;
+                _this.hide();
             });
         }
     };
-    OverlayPanel.prototype.toggle = function (event, target) {
-        var currentTarget = (target || event.currentTarget || event.target);
-        if (!this.target || this.target == currentTarget) {
-            if (this.visible)
-                this.hide();
-            else
-                this.show(event, target);
-        }
-        else {
-            this.show(event, target);
-        }
-        if (this.dismissable) {
-            this.targetEvent = true;
-        }
-        this.target = currentTarget;
-    };
     OverlayPanel.prototype.show = function (event, target) {
-        if (this.dismissable) {
-            this.targetEvent = true;
-        }
-        this.onBeforeShow.emit(null);
+        this.onBeforeShow.next(null);
         var elementTarget = target || event.currentTarget || event.target;
         var container = this.el.nativeElement.children[0];
         container.style.zIndex = ++PUI.zindex;
@@ -65,32 +42,24 @@ var OverlayPanel = (function () {
             this.domHandler.absolutePosition(container, elementTarget);
             this.domHandler.fadeIn(container, 250);
         }
-        this.onAfterShow.emit(null);
+        this.onAfterShow.next(null);
+        event.stopPropagation();
     };
     OverlayPanel.prototype.hide = function () {
         if (this.visible) {
-            this.onBeforeHide.emit(null);
+            this.onBeforeHide.next(null);
             this.visible = false;
-            this.onAfterHide.emit(null);
-        }
-    };
-    OverlayPanel.prototype.onPanelClick = function () {
-        if (this.dismissable) {
-            this.selfClick = true;
+            this.onAfterHide.next(null);
         }
     };
     OverlayPanel.prototype.onCloseClick = function (event) {
         this.hide();
-        if (this.dismissable) {
-            this.selfClick = true;
-        }
         event.preventDefault();
     };
     OverlayPanel.prototype.ngOnDestroy = function () {
         if (this.documentClickListener) {
             this.documentClickListener();
         }
-        this.target = null;
     };
     __decorate([
         core_1.Input(), 
@@ -127,7 +96,7 @@ var OverlayPanel = (function () {
     OverlayPanel = __decorate([
         core_1.Component({
             selector: 'p-overlayPanel',
-            template: "\n        <div [ngClass]=\"'ui-overlaypanel ui-widget ui-widget-content ui-corner-all ui-shadow'\" [attr.style]=\"style\" [attr.styleClass]=\"styleClass\"\n            [style.display]=\"visible ? 'block' : 'none'\" (click)=\"onPanelClick()\">\n            <div class=\"ui-overlaypanel-content\">\n                <ng-content></ng-content>\n            </div>\n            <a href=\"#\" *ngIf=\"showCloseIcon\" class=\"ui-overlaypanel-close ui-state-default\" [ngClass]=\"{'ui-state-hover':hoverCloseIcon}\"\n                (mouseenter)=\"hoverCloseIcon=true\" (mouseleave)=\"hoverCloseIcon=false\" (click)=\"onCloseClick($event)\"><span class=\"fa fa-fw fa-close\"></span></a>\n        </div>\n    ",
+            template: "\n        <div [ngClass]=\"'ui-overlaypanel ui-widget ui-widget-content ui-corner-all ui-shadow'\" [attr.style]=\"style\" [attr.styleClass]=\"styleClass\"\n            [style.display]=\"visible ? 'block' : 'none'\" (click)=\"$event.stopPropagation()\">\n            <div class=\"ui-overlaypanel-content\">\n                <ng-content></ng-content>\n            </div>\n            <a href=\"#\" *ngIf=\"showCloseIcon\" class=\"ui-overlaypanel-close ui-state-default\" [ngClass]=\"{'ui-state-hover':hoverCloseIcon}\"\n                (mouseenter)=\"hoverCloseIcon=true\" (mouseleave)=\"hoverCloseIcon=false\" (click)=\"onCloseClick($event)\"><span class=\"fa fa-fw fa-close\"></span></a>\n        </div>\n    ",
             providers: [domhandler_1.DomHandler]
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, domhandler_1.DomHandler, core_1.Renderer])

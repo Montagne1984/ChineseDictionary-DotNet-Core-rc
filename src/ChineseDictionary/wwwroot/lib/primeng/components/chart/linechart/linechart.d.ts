@@ -67,6 +67,4 @@ export declare class LineChart implements AfterViewInit, OnDestroy, DoCheck {
     ngOnDestroy(): void;
     onCanvasClick(event: any): void;
     initChart(): void;
-    getCanvas(): any;
-    getBase64Image(): any;
 }

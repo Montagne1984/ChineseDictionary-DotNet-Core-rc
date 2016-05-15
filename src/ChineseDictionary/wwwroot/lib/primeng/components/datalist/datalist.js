@@ -22,7 +22,7 @@ var DataList = (function () {
     }
     DataList.prototype.ngAfterViewInit = function () {
         if (this.lazy) {
-            this.onLazyLoad.emit({
+            this.onLazyLoad.next({
                 first: this.first,
                 rows: this.rows
             });
@@ -50,7 +50,7 @@ var DataList = (function () {
         this.first = event.first;
         this.rows = event.rows;
         if (this.lazy) {
-            this.onLazyLoad.emit(this.createLazyLoadMetadata());
+            this.onLazyLoad.next(this.createLazyLoadMetadata());
         }
         else {
             this.updateDataToRender(this.value);
@@ -102,10 +102,6 @@ var DataList = (function () {
     ], DataList.prototype, "pageLinks", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', Array)
-    ], DataList.prototype, "rowsPerPageOptions", void 0);
-    __decorate([
-        core_1.Input(), 
         __metadata('design:type', Boolean)
     ], DataList.prototype, "lazy", void 0);
     __decorate([
@@ -135,7 +131,7 @@ var DataList = (function () {
     DataList = __decorate([
         core_1.Component({
             selector: 'p-dataList',
-            template: "\n        <div [ngClass]=\"'ui-datalist ui-widget'\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <div class=\"ui-datalist-header ui-widget-header ui-corner-top\" *ngIf=\"header\">\n                <ng-content select=\"header\"></ng-content>\n            </div>\n            <div class=\"ui-datalist-content ui-widget-content\">\n                <ul class=\"ui-datalist-data\">\n                    <template ngFor [ngForOf]=\"dataToRender\" [ngForTemplate]=\"itemTemplate\"></template>\n                </ul>\n            </div>\n            <p-paginator [rows]=\"rows\" [first]=\"first\" [totalRecords]=\"totalRecords\" [pageLinkSize]=\"pageLinks\" \n            (onPageChange)=\"paginate($event)\" styleClass=\"ui-paginator-bottom\" [rowsPerPageOptions]=\"rowsPerPageOptions\" *ngIf=\"paginator\"></p-paginator>\n            <div class=\"ui-datalist-footer ui-widget-header ui-corner-bottom\" *ngIf=\"footer\">\n                <ng-content select=\"footer\"></ng-content>\n            </div>\n        </div>\n    ",
+            template: "\n        <div [ngClass]=\"'ui-datalist ui-widget'\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <div class=\"ui-datalist-header ui-widget-header ui-corner-top\" *ngIf=\"header\">\n                <ng-content select=\"header\"></ng-content>\n            </div>\n            <div class=\"ui-datalist-content ui-widget-content\">\n                <ul class=\"ui-datalist-data\">\n                    <template ngFor [ngForOf]=\"dataToRender\" [ngForTemplate]=\"itemTemplate\"></template>\n                </ul>\n            </div>\n            <p-paginator [rows]=\"rows\" [first]=\"first\" [totalRecords]=\"totalRecords\" [pageLinkSize]=\"pageLinks\" \n            (onPageChange)=\"paginate($event)\" styleClass=\"ui-paginator-bottom\" *ngIf=\"paginator\"></p-paginator>\n            <div class=\"ui-datalist-footer ui-widget-header ui-corner-bottom\" *ngIf=\"footer\">\n                <ng-content select=\"footer\"></ng-content>\n            </div>\n        </div>\n    ",
             directives: [paginator_1.Paginator]
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, core_1.IterableDiffers])

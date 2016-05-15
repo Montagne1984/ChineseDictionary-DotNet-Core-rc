@@ -8,27 +8,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('angular2/core');
-var common_1 = require('angular2/common');
-var lang_1 = require('angular2/src/facade/lang');
-var SELECTBUTTON_VALUE_ACCESSOR = lang_1.CONST_EXPR(new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
-    useExisting: core_1.forwardRef(function () { return SelectButton; }),
-    multi: true
-}));
 var SelectButton = (function () {
     function SelectButton() {
+        this.valueChange = new core_1.EventEmitter();
         this.onChange = new core_1.EventEmitter();
-        this.onModelChange = function () { };
-        this.onModelTouched = function () { };
     }
-    SelectButton.prototype.writeValue = function (value) {
-        this.value = value;
-    };
-    SelectButton.prototype.registerOnChange = function (fn) {
-        this.onModelChange = fn;
-    };
-    SelectButton.prototype.registerOnTouched = function (fn) {
-        this.onModelTouched = fn;
-    };
     SelectButton.prototype.onItemClick = function (event, option) {
         if (this.multiple) {
             var itemIndex = this.findItemIndex(option);
@@ -38,10 +22,9 @@ var SelectButton = (function () {
                 this.value.push(option.value);
         }
         else {
-            this.value = option.value;
+            this.valueChange.next(option.value);
         }
-        this.onModelChange(this.value);
-        this.onChange.emit({
+        this.onChange.next({
             originalEvent: event,
             value: this.value
         });
@@ -78,6 +61,10 @@ var SelectButton = (function () {
     ], SelectButton.prototype, "multiple", void 0);
     __decorate([
         core_1.Input(), 
+        __metadata('design:type', Object)
+    ], SelectButton.prototype, "value", void 0);
+    __decorate([
+        core_1.Input(), 
         __metadata('design:type', String)
     ], SelectButton.prototype, "style", void 0);
     __decorate([
@@ -87,12 +74,15 @@ var SelectButton = (function () {
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
+    ], SelectButton.prototype, "valueChange", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
     ], SelectButton.prototype, "onChange", void 0);
     SelectButton = __decorate([
         core_1.Component({
             selector: 'p-selectButton',
-            template: "\n        <div [ngClass]=\"'ui-selectbutton ui-buttonset ui-widget ui-corner-all ui-buttonset-' + options.length\" (mouseleave)=\"hoveredItem=null\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <div *ngFor=\"#option of options;\" class=\"ui-button ui-widget ui-state-default ui-button-text-only\"\n                [ngClass]=\"{'ui-state-hover': hoveredItem == option,'ui-state-active':isSelected(option)}\"\n                (mouseenter)=\"hoveredItem=option\" (click)=\"onItemClick($event,option)\">\n                <span class=\"ui-button-text ui-c\">{{option.label}}</span>\n            </div>\n        </div>\n    ",
-            providers: [SELECTBUTTON_VALUE_ACCESSOR]
+            template: "\n        <div [ngClass]=\"'ui-selectbutton ui-buttonset ui-widget ui-corner-all ui-buttonset-' + options.length\" (mouseleave)=\"hoveredItem=null\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <div *ngFor=\"#option of options;\" class=\"ui-button ui-widget ui-state-default ui-button-text-only\"\n                [ngClass]=\"{'ui-state-hover': hoveredItem == option,'ui-state-active':isSelected(option)}\"\n                (mouseenter)=\"hoveredItem=option\" (click)=\"onItemClick($event,option)\">\n                <span class=\"ui-button-text ui-c\">{{option.label}}</span>\n            </div>\n        </div>\n    "
         }), 
         __metadata('design:paramtypes', [])
     ], SelectButton);

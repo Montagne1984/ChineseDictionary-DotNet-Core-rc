@@ -11,12 +11,6 @@ var core_1 = require('angular2/core');
 var inputtext_1 = require('../inputtext/inputtext');
 var button_1 = require('../button/button');
 var domhandler_1 = require('../dom/domhandler');
-var common_1 = require('angular2/common');
-var lang_1 = require('angular2/src/facade/lang');
-var AUTOCOMPLETE_VALUE_ACCESSOR = lang_1.CONST_EXPR(new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
-    useExisting: core_1.forwardRef(function () { return AutoComplete; }),
-    multi: true
-}));
 var AutoComplete = (function () {
     function AutoComplete(el, domHandler, differs, renderer) {
         this.el = el;
@@ -25,12 +19,11 @@ var AutoComplete = (function () {
         this.minLength = 3;
         this.delay = 300;
         this.completeMethod = new core_1.EventEmitter();
+        this.valueChange = new core_1.EventEmitter();
         this.onSelect = new core_1.EventEmitter();
         this.onUnselect = new core_1.EventEmitter();
         this.onDropdownClick = new core_1.EventEmitter();
         this.scrollHeight = '200px';
-        this.onModelChange = function () { };
-        this.onModelTouched = function () { };
         this.panelVisible = false;
         this.differ = differs.find([]).create(null);
     }
@@ -63,21 +56,11 @@ var AutoComplete = (function () {
             this.suggestionsUpdated = false;
         }
     };
-    AutoComplete.prototype.writeValue = function (value) {
-        this.value = value;
-    };
-    AutoComplete.prototype.registerOnChange = function (fn) {
-        this.onModelChange = fn;
-    };
-    AutoComplete.prototype.registerOnTouched = function (fn) {
-        this.onModelTouched = fn;
-    };
     AutoComplete.prototype.onInput = function (event) {
         var _this = this;
         var value = event.target.value;
         if (!this.multiple) {
-            this.value = value;
-            this.onModelChange(value);
+            this.valueChange.next(value);
         }
         if (value.length === 0) {
             this.hide();
@@ -100,7 +83,7 @@ var AutoComplete = (function () {
         if (query === undefined || query === null) {
             return;
         }
-        this.completeMethod.emit({
+        this.completeMethod.next({
             originalEvent: event,
             query: query
         });
@@ -139,14 +122,13 @@ var AutoComplete = (function () {
             this.input.value = '';
             this.value = this.value || [];
             this.value.push(selectedValue);
-            this.onModelChange(this.value);
+            this.valueChange.next(this.value);
         }
         else {
             this.input.value = this.field ? this.resolveFieldData(selectedValue) : selectedValue;
-            this.value = selectedValue;
-            this.onModelChange(this.value);
+            this.valueChange.next(selectedValue);
         }
-        this.onSelect.emit(selectedValue);
+        this.onSelect.next(selectedValue);
         this.input.focus();
     };
     AutoComplete.prototype.findListItem = function (element) {
@@ -178,16 +160,15 @@ var AutoComplete = (function () {
         this.panelVisible = false;
     };
     AutoComplete.prototype.handleDropdownClick = function (event) {
-        this.onDropdownClick.emit({
+        this.onDropdownClick.next({
             originalEvent: event,
             query: this.input.value
         });
     };
     AutoComplete.prototype.removeItem = function (item) {
         var itemIndex = this.domHandler.index(item);
-        this.onUnselect.emit(this.suggestions[itemIndex]);
+        this.onUnselect.next(this.suggestions[itemIndex]);
         this.value.splice(itemIndex, 1);
-        this.onModelChange(this.value);
     };
     AutoComplete.prototype.resolveFieldData = function (data) {
         if (data && this.field) {
@@ -265,6 +246,10 @@ var AutoComplete = (function () {
     };
     __decorate([
         core_1.Input(), 
+        __metadata('design:type', Object)
+    ], AutoComplete.prototype, "value", void 0);
+    __decorate([
+        core_1.Input(), 
         __metadata('design:type', Number)
     ], AutoComplete.prototype, "minLength", void 0);
     __decorate([
@@ -318,6 +303,10 @@ var AutoComplete = (function () {
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
+    ], AutoComplete.prototype, "valueChange", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
     ], AutoComplete.prototype, "onSelect", void 0);
     __decorate([
         core_1.Output(), 
@@ -350,9 +339,9 @@ var AutoComplete = (function () {
     AutoComplete = __decorate([
         core_1.Component({
             selector: 'p-autoComplete',
-            template: "\n        <span [ngClass]=\"{'ui-autocomplete ui-widget':true,'ui-autocomplete-dd':dropdown}\" [attr.style]=\"style\" [attr.styleClass]=\"styleClass\">\n            <input *ngIf=\"!multiple\" #in pInputText type=\"text\" [attr.style]=\"inputStyle\" [attr.styleClass]=\"inputStyleClass\" \n            [value]=\"value ? (field ? resolveFieldData(value)||value : value) : null\" (input)=\"onInput($event)\" (keydown)=\"onKeydown($event)\" (blur)=\"onModelTouched()\"\n            [attr.placeholder]=\"placeholder\" [attr.size]=\"size\" [attr.maxlength]=\"maxlength\" [attr.readonly]=\"readonly\" [attr.disabled]=\"disabled\" \n            ><ul *ngIf=\"multiple\" class=\"ui-autocomplete-multiple ui-widget ui-inputtext ui-state-default ui-corner-all\" (click)=\"multiIn.focus()\">\n                <li #token *ngFor=\"#val of value\" class=\"ui-autocomplete-token ui-state-highlight ui-corner-all\">\n                    <span class=\"ui-autocomplete-token-icon fa fa-fw fa-close\" (click)=\"removeItem(token)\"></span>\n                    <span class=\"ui-autocomplete-token-label\">{{val[field]}}</span>\n                </li>\n                <li class=\"ui-autocomplete-input-token\">\n                    <input #multiIn type=\"text\" pInputText (input)=\"onInput($event)\" (keydown)=\"onKeydown($event)\" (blur)=\"onModelTouched()\">\n                </li>\n            </ul\n            ><button type=\"button\" pButton icon=\"fa-fw fa-caret-down\" class=\"ui-autocomplete-dropdown\" (click)=\"handleDropdownClick($event)\" *ngIf=\"dropdown\"></button>\n            <div class=\"ui-autocomplete-panel ui-widget-content ui-corner-all ui-shadow\" [style.display]=\"panelVisible ? 'block' : 'none'\" [style.width]=\"'100%'\" [style.max-height]=\"scrollHeight\">\n                <ul class=\"ui-autocomplete-items ui-autocomplete-list ui-widget-content ui-widget ui-corner-all ui-helper-reset\" \n                    (mouseover)=\"onItemMouseover($event)\" (mouseout)=\"onItemMouseout($event)\" (click)=\"onItemClick($event)\" *ngIf=\"!itemTemplate\">\n                    <li class=\"ui-autocomplete-list-item ui-corner-all\" *ngFor=\"#item of suggestions\">{{field ? item[field] : item}}</li>\n                </ul>\n                <ul class=\"ui-autocomplete-items ui-autocomplete-list ui-widget-content ui-widget ui-corner-all ui-helper-reset\" \n                    (mouseover)=\"onItemMouseover($event)\" (mouseout)=\"onItemMouseout($event)\" (click)=\"onItemClick($event)\"*ngIf=\"itemTemplate\">\n                    <template ngFor [ngForOf]=\"suggestions\" [ngForTemplate]=\"itemTemplate\"></template>\n                </ul>\n            </div>\n        </span>\n    ",
+            template: "\n        <span [ngClass]=\"{'ui-autocomplete ui-widget':true,'ui-autocomplete-dd':dropdown}\" [attr.style]=\"style\" [attr.styleClass]=\"styleClass\">\n            <input *ngIf=\"!multiple\" #in pInputText type=\"text\" [attr.style]=\"inputStyle\" [attr.styleClass]=\"inputStyleClass\" \n            [value]=\"value ? (field ? resolveFieldData(value)||value : value) : null\" (input)=\"onInput($event)\" (keydown)=\"onKeydown($event)\"\n            [attr.placeholder]=\"placeholder\" [attr.size]=\"size\" [attr.maxlength]=\"maxlength\" [attr.readonly]=\"readonly\" [attr.disabled]=\"disabled\" \n            ><ul *ngIf=\"multiple\" class=\"ui-autocomplete-multiple ui-widget ui-inputtext ui-state-default ui-corner-all\" (click)=\"multiIn.focus()\">\n                <li #token *ngFor=\"#val of value\" class=\"ui-autocomplete-token ui-state-highlight ui-corner-all\">\n                    <span class=\"ui-autocomplete-token-icon fa fa-fw fa-close\" (click)=\"removeItem(token)\"></span>\n                    <span class=\"ui-autocomplete-token-label\">{{val[field]}}</span>\n                </li>\n                <li class=\"ui-autocomplete-input-token\">\n                    <input #multiIn type=\"text\" pInputText (input)=\"onInput($event)\" (keydown)=\"onKeydown($event)\">\n                </li>\n            </ul\n            ><button type=\"button\" pButton icon=\"fa-fw fa-caret-down\" class=\"ui-autocomplete-dropdown\" (click)=\"handleDropdownClick($event)\" *ngIf=\"dropdown\"></button>\n            <div class=\"ui-autocomplete-panel ui-widget-content ui-corner-all ui-shadow\" [style.display]=\"panelVisible ? 'block' : 'none'\" [style.width]=\"'100%'\" [style.max-height]=\"scrollHeight\">\n                <ul class=\"ui-autocomplete-items ui-autocomplete-list ui-widget-content ui-widget ui-corner-all ui-helper-reset\" \n                    (mouseover)=\"onItemMouseover($event)\" (mouseout)=\"onItemMouseout($event)\" (click)=\"onItemClick($event)\" *ngIf=\"!itemTemplate\">\n                    <li class=\"ui-autocomplete-list-item ui-corner-all\" *ngFor=\"#item of suggestions\">{{field ? item[field] : item}}</li>\n                </ul>\n                <ul class=\"ui-autocomplete-items ui-autocomplete-list ui-widget-content ui-widget ui-corner-all ui-helper-reset\" \n                    (mouseover)=\"onItemMouseover($event)\" (mouseout)=\"onItemMouseout($event)\" (click)=\"onItemClick($event)\"*ngIf=\"itemTemplate\">\n                    <template ngFor [ngForOf]=\"suggestions\" [ngForTemplate]=\"itemTemplate\"></template>\n                </ul>\n            </div>\n        </span>\n    ",
             directives: [inputtext_1.InputText, button_1.Button],
-            providers: [domhandler_1.DomHandler, AUTOCOMPLETE_VALUE_ACCESSOR]
+            providers: [domhandler_1.DomHandler]
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, domhandler_1.DomHandler, core_1.IterableDiffers, core_1.Renderer])
     ], AutoComplete);

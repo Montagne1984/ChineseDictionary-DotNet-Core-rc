@@ -8,9 +8,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('angular2/core');
+var common_1 = require('angular2/common');
 var InputText = (function () {
-    function InputText(el) {
+    function InputText(el, control) {
         this.el = el;
+        this.control = control;
     }
     InputText.prototype.onMouseover = function (e) {
         this.hover = true;
@@ -26,6 +28,9 @@ var InputText = (function () {
     };
     InputText.prototype.isDisabled = function () {
         return this.el.nativeElement.disabled;
+    };
+    InputText.prototype.isInvalid = function () {
+        return !this.control.valid;
     };
     __decorate([
         core_1.HostListener('mouseover', ['$event']), 
@@ -56,15 +61,18 @@ var InputText = (function () {
             selector: '[pInputText]',
             host: {
                 '[class.ui-inputtext]': 'true',
+                '[class.ui-inputfield]': 'true',
                 '[class.ui-corner-all]': 'true',
                 '[class.ui-state-default]': 'true',
                 '[class.ui-widget]': 'true',
                 '[class.ui-state-hover]': 'hover',
                 '[class.ui-state-focus]': 'focus',
-                '[class.ui-state-disabled]': 'isDisabled()'
-            }
+                '[class.ui-state-disabled]': 'isDisabled()',
+                '[class.ui-state-error]': 'isInvalid()'
+            },
+            providers: [common_1.NgModel]
         }), 
-        __metadata('design:paramtypes', [core_1.ElementRef])
+        __metadata('design:paramtypes', [core_1.ElementRef, common_1.NgModel])
     ], InputText);
     return InputText;
 })();

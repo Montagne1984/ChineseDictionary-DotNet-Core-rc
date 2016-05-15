@@ -1,6 +1,8 @@
 import { ElementRef, OnInit } from 'angular2/core';
+import { NgModel } from 'angular2/common';
 export declare class InputTextarea implements OnInit {
     private el;
+    private control;
     autoResize: boolean;
     rows: number;
     cols: number;
@@ -8,13 +10,14 @@ export declare class InputTextarea implements OnInit {
     focus: boolean;
     rowsDefault: number;
     colsDefault: number;
-    constructor(el: ElementRef);
+    constructor(el: ElementRef, control: NgModel);
     ngOnInit(): void;
     onMouseover(e: any): void;
     onMouseout(e: any): void;
     onFocus(e: any): void;
     onBlur(e: any): void;
     isDisabled(): any;
+    isInvalid(): boolean;
     onKeyup(e: any): void;
     resize(): void;
 }

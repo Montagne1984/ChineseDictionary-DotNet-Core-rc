@@ -12,9 +12,7 @@ export declare class DataTable implements AfterViewChecked, AfterViewInit, OnIni
     rows: number;
     totalRecords: number;
     pageLinks: number;
-    rowsPerPageOptions: number[];
     responsive: boolean;
-    stacked: boolean;
     selectionMode: string;
     selection: any;
     selectionChange: EventEmitter<any>;
@@ -22,7 +20,6 @@ export declare class DataTable implements AfterViewChecked, AfterViewInit, OnIni
     onRowSelect: EventEmitter<any>;
     onRowUnselect: EventEmitter<any>;
     onRowDblclick: EventEmitter<any>;
-    onContextMenuSelect: EventEmitter<any>;
     filterDelay: number;
     lazy: boolean;
     onLazyLoad: EventEmitter<any>;
@@ -43,7 +40,6 @@ export declare class DataTable implements AfterViewChecked, AfterViewInit, OnIni
     sortField: string;
     sortOrder: number;
     multiSortMeta: SortMeta[];
-    contextMenu: any;
     onEditInit: EventEmitter<any>;
     onEditComplete: EventEmitter<any>;
     onEdit: EventEmitter<any>;
@@ -80,7 +76,6 @@ export declare class DataTable implements AfterViewChecked, AfterViewInit, OnIni
     isSorted(column: Column): boolean;
     getSortOrder(column: Column): number;
     onRowClick(event: any, rowData: any): void;
-    onRowRightClick(event: any, rowData: any): void;
     rowDblclick(event: any, rowData: any): void;
     isSingleSelectionMode(): boolean;
     isMultipleSelectionMode(): boolean;

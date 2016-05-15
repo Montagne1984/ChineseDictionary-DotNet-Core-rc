@@ -7,7 +7,6 @@ export declare class DataGrid implements AfterViewInit, DoCheck {
     columns: number;
     totalRecords: number;
     pageLinks: number;
-    rowsPerPageOptions: number[];
     lazy: boolean;
     onLazyLoad: EventEmitter<any>;
     style: string;

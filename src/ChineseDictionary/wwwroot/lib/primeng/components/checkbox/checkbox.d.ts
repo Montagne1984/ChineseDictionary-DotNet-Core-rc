@@ -1,21 +1,17 @@
 import { EventEmitter } from 'angular2/core';
-import { ControlValueAccessor } from 'angular2/common';
-export declare class Checkbox implements ControlValueAccessor {
+export declare class Checkbox {
     value: any;
     name: string;
     disabled: boolean;
-    onChange: EventEmitter<any>;
     model: any;
-    onModelChange: Function;
-    onModelTouched: Function;
+    checked: any;
+    onChange: EventEmitter<any>;
+    modelChange: EventEmitter<any>;
+    checkedChange: EventEmitter<any>;
     hover: boolean;
-    checked: boolean;
-    onClick(): void;
-    isChecked(): boolean;
+    onClick(input: any): void;
+    isChecked(value: any): any;
     removeValue(value: any): void;
     addValue(value: any): void;
     findValueIndex(value: any): number;
-    writeValue(model: any): void;
-    registerOnChange(fn: Function): void;
-    registerOnTouched(fn: Function): void;
 }
