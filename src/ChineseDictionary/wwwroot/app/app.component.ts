@@ -2,6 +2,7 @@
 import { RouteConfig, AsyncRoute, ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, RouteDefinition, Location } from 'angular2/router';
 import {StaticComponent} from "./components/static.component";
 import {ConsonantComponent} from "./components/consonant.component";
+import {IPAConsonantComponent} from "./components/ipaconsonant.component";
 
 declare var System: any;
 
@@ -24,6 +25,11 @@ declare var System: any;
         path: '/consonant',
         name: 'Consonant',
         component: ConsonantComponent
+    },
+    {
+        path: '/ipaconsonant',
+        name: 'IPAConsonant',
+        component: IPAConsonantComponent
     },
     new AsyncRoute({
         path: "/sub",

@@ -30,23 +30,7 @@ System.register(["angular2/core", "primeng/primeng", "../domain/ipaconsonant"], 
                 }
                 IPAConsonantComponent.prototype.ngOnInit = function () {
                     //this.itemService.getItemsSmall().then(items => this.items = items);
-                    this.items = [
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" },
-                        { vin: "a", year: "b", brand: "c", color: "d" }
-                    ];
+                    this.items = [];
                 };
                 IPAConsonantComponent.prototype.showDialogToAdd = function () {
                     this.newItem = true;

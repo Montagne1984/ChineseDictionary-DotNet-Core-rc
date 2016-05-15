@@ -24,21 +24,6 @@ export class IPAConsonantComponent implements OnInit {
     ngOnInit() {
         //this.itemService.getItemsSmall().then(items => this.items = items);
         this.items = [
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" },
-            { vin: "a", year: "b", brand: "c", color: "d" }
         ];
     }
 

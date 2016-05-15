@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/router', "./components/static.component", "./components/consonant.component"], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/router', "./components/static.component", "./components/consonant.component", "./components/ipaconsonant.component"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/router', "./components/static.compon
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, static_component_1, consonant_component_1;
+    var core_1, router_1, static_component_1, consonant_component_1, ipaconsonant_component_1;
     var AppComponent;
     return {
         setters:[
@@ -25,6 +25,9 @@ System.register(['angular2/core', 'angular2/router', "./components/static.compon
             },
             function (consonant_component_1_1) {
                 consonant_component_1 = consonant_component_1_1;
+            },
+            function (ipaconsonant_component_1_1) {
+                ipaconsonant_component_1 = ipaconsonant_component_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -50,6 +53,11 @@ System.register(['angular2/core', 'angular2/router', "./components/static.compon
                             path: '/consonant',
                             name: 'Consonant',
                             component: consonant_component_1.ConsonantComponent
+                        },
+                        {
+                            path: '/ipaconsonant',
+                            name: 'IPAConsonant',
+                            component: ipaconsonant_component_1.IPAConsonantComponent
                         },
                         new router_1.AsyncRoute({
                             path: "/sub",
