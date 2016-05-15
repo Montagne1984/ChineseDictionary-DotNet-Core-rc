@@ -1,11 +1,13 @@
-import { ElementRef, AfterContentInit, OnDestroy, OnChanges, SimpleChange, EventEmitter } from 'angular2/core';
-export declare class Calendar implements AfterContentInit, OnChanges, OnDestroy {
+import { ElementRef, AfterViewInit, OnDestroy, OnChanges, SimpleChange, EventEmitter, NgZone } from 'angular2/core';
+import { ControlValueAccessor } from 'angular2/common';
+export declare class Calendar implements AfterViewInit, OnChanges, OnDestroy, ControlValueAccessor {
     private el;
-    value: string;
-    valueChange: EventEmitter<any>;
+    private zone;
     readonlyInput: boolean;
     style: string;
     styleClass: string;
+    inputStyle: string;
+    inputStyleClass: string;
     placeholder: string;
     inline: boolean;
     showAnim: string;
@@ -21,15 +23,45 @@ export declare class Calendar implements AfterContentInit, OnChanges, OnDestroy 
     minDate: any;
     maxDate: any;
     disabled: any;
+    showIcon: boolean;
+    timeFormat: string;
+    timeOnly: boolean;
+    stepHour: number;
+    stepMinute: number;
+    stepSecond: number;
+    hourMin: number;
+    hourMax: number;
+    minuteMin: number;
+    minuteMax: number;
+    secondMin: number;
+    secondMax: number;
+    hourGrid: number;
+    minuteGrid: number;
+    secondGrid: number;
+    timeControlType: string;
+    horizontalTimeControls: boolean;
+    minTime: string;
+    maxTime: string;
+    timezoneList: string[];
+    locale: any;
     onSelect: EventEmitter<any>;
+    value: string;
+    onModelChange: Function;
+    onModelTouched: Function;
     hovered: boolean;
     focused: boolean;
     initialized: boolean;
-    stopNgOnChangesPropagation: boolean;
-    constructor(el: ElementRef);
-    ngAfterContentInit(): void;
+    calendarElement: any;
+    constructor(el: ElementRef, zone: NgZone);
+    ngAfterViewInit(): void;
+    onInput(event: any): void;
+    onBlur(event: any): void;
+    writeValue(value: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
     ngOnChanges(changes: {
         [key: string]: SimpleChange;
     }): void;
     ngOnDestroy(): void;
+    onButtonClick(event: any, input: any): void;
 }

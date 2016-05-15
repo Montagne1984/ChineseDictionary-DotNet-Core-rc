@@ -1,7 +1,7 @@
 ﻿import {Component} from 'angular2/core';
 import { RouteConfig, AsyncRoute, ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, RouteDefinition, Location } from 'angular2/router';
 import {StaticComponent} from "./components/static.component";
-import {ConsonantComponent} from "./components/consonant.component";
+//import {ConsonantComponent} from "./components/consonant.component";
 import {IPAConsonantComponent} from "./components/ipaconsonant.component";
 
 declare var System: any;
@@ -21,11 +21,11 @@ declare var System: any;
         component: StaticComponent,
         useAsDefault: true
     },
-    {
-        path: '/consonant',
-        name: 'Consonant',
-        component: ConsonantComponent
-    },
+    //{
+    //    path: '/consonant',
+    //    name: 'Consonant',
+    //    component: ConsonantComponent
+    //},
     {
         path: '/ipaconsonant',
         name: 'IPAConsonant',

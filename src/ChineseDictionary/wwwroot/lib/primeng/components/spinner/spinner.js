@@ -10,13 +10,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('angular2/core');
 var inputtext_1 = require('../inputtext/inputtext');
 var domhandler_1 = require('../dom/domhandler');
+var common_1 = require('angular2/common');
+var lang_1 = require('angular2/src/facade/lang');
+var SPINNER_VALUE_ACCESSOR = lang_1.CONST_EXPR(new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
+    useExisting: core_1.forwardRef(function () { return Spinner; }),
+    multi: true
+}));
 var Spinner = (function () {
     function Spinner(el, domHandler) {
         this.el = el;
         this.domHandler = domHandler;
-        this.valueChange = new core_1.EventEmitter();
         this.onChange = new core_1.EventEmitter();
         this.step = 1;
+        this.onModelChange = function () { };
+        this.onModelTouched = function () { };
     }
     Spinner.prototype.ngAfterViewInit = function () {
         if (Math.floor(this.step) === 0) {
@@ -51,7 +58,7 @@ var Spinner = (function () {
             this.value = this.max;
         }
         inputElement.value = this.value;
-        this.valueChange.next(this.value);
+        this.onModelChange(this.value);
     };
     Spinner.prototype.toFixed = function (value, precision) {
         var power = Math.pow(10, precision || 0);
@@ -121,12 +128,13 @@ var Spinner = (function () {
     };
     Spinner.prototype.onInput = function (event) {
         this.value = this.parseValue(event.target.value);
-        this.valueChange.next(this.value);
+        this.onModelChange(this.value);
     };
     Spinner.prototype.onBlur = function (inputElement) {
         if (this.value !== undefined && this.value !== null) {
             inputElement.value = this.value;
         }
+        this.onModelTouched();
     };
     Spinner.prototype.parseValue = function (val) {
         var value;
@@ -153,21 +161,22 @@ var Spinner = (function () {
         return value;
     };
     Spinner.prototype.handleChange = function (event) {
-        this.onChange.next(event);
+        this.onChange.emit(event);
     };
     Spinner.prototype.clearTimer = function () {
         if (this.timer) {
             clearInterval(this.timer);
         }
     };
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Number)
-    ], Spinner.prototype, "value", void 0);
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', core_1.EventEmitter)
-    ], Spinner.prototype, "valueChange", void 0);
+    Spinner.prototype.writeValue = function (value) {
+        this.value = value;
+    };
+    Spinner.prototype.registerOnChange = function (fn) {
+        this.onModelChange = fn;
+    };
+    Spinner.prototype.registerOnTouched = function (fn) {
+        this.onModelTouched = fn;
+    };
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
@@ -199,9 +208,9 @@ var Spinner = (function () {
     Spinner = __decorate([
         core_1.Component({
             selector: 'p-spinner',
-            template: "\n        <span class=\"ui-spinner ui-widget ui-corner-all\">\n            <input #in id=\"basic\" pInputText type=\"text\" class=\"ui-spinner-input\"\n            [attr.size]=\"size\" [attr.maxlength]=\"maxlength\" [attr.readonly]=\"readonly\" [attr.disabled]=\"disabled\"\n            (keydown)=\"onInputKeydown($event,in)\" (input)=\"onInput($event)\" (blur)=\"onBlur(in)\" (change)=\"handleChange($event)\">\n            <a class=\"ui-spinner-button ui-spinner-up ui-corner-tr ui-button ui-widget ui-state-default ui-button-text-only\"\n                [ngClass]=\"{'ui-state-hover':hoverUp,'ui-state-active':activeUp,'ui-state-disabled':disabled}\"\n                (mouseenter)=\"onUpButtonMouseenter($event)\" (mouseleave)=\"onUpButtonMouseleave($event)\" (mousedown)=\"onUpButtonMousedown($event,in)\" (mouseup)=\"onUpButtonMouseup($event)\">\n                <span class=\"ui-button-text\">\n                    <span class=\"fa fa-fw fa-caret-up\"></span>\n                </span>\n            </a>\n            <a class=\"ui-spinner-button ui-spinner-down ui-corner-br ui-button ui-widget ui-state-default ui-button-text-only\"\n                [ngClass]=\"{'ui-state-hover':hoverDown,'ui-state-active':activeDown,'ui-state-disabled':disabled}\"\n                (mouseenter)=\"onDownButtonMouseenter($event)\" (mouseleave)=\"onDownButtonMouseleave($event)\" (mousedown)=\"onDownButtonMousedown($event,in)\" (mouseup)=\"onDownButtonMouseup($event)\">\n                <span class=\"ui-button-text\">\n                    <span class=\"fa fa-fw fa-caret-down\"></span>\n                </span>\n            </a>\n        </span>\n    ",
+            template: "\n        <span class=\"ui-spinner ui-widget ui-corner-all\">\n            <input #in pInputText type=\"text\" class=\"ui-spinner-input\"\n            [attr.size]=\"size\" [attr.maxlength]=\"maxlength\" [attr.readonly]=\"readonly\" [attr.disabled]=\"disabled\"\n            (keydown)=\"onInputKeydown($event,in)\" (input)=\"onInput($event)\" (blur)=\"onBlur(in)\" (change)=\"handleChange($event)\">\n            <a class=\"ui-spinner-button ui-spinner-up ui-corner-tr ui-button ui-widget ui-state-default ui-button-text-only\"\n                [ngClass]=\"{'ui-state-hover':hoverUp,'ui-state-active':activeUp,'ui-state-disabled':disabled}\"\n                (mouseenter)=\"onUpButtonMouseenter($event)\" (mouseleave)=\"onUpButtonMouseleave($event)\" (mousedown)=\"onUpButtonMousedown($event,in)\" (mouseup)=\"onUpButtonMouseup($event)\">\n                <span class=\"ui-button-text\">\n                    <span class=\"fa fa-fw fa-caret-up\"></span>\n                </span>\n            </a>\n            <a class=\"ui-spinner-button ui-spinner-down ui-corner-br ui-button ui-widget ui-state-default ui-button-text-only\"\n                [ngClass]=\"{'ui-state-hover':hoverDown,'ui-state-active':activeDown,'ui-state-disabled':disabled}\"\n                (mouseenter)=\"onDownButtonMouseenter($event)\" (mouseleave)=\"onDownButtonMouseleave($event)\" (mousedown)=\"onDownButtonMousedown($event,in)\" (mouseup)=\"onDownButtonMouseup($event)\">\n                <span class=\"ui-button-text\">\n                    <span class=\"fa fa-fw fa-caret-down\"></span>\n                </span>\n            </a>\n        </span>\n    ",
             directives: [inputtext_1.InputText],
-            providers: [domhandler_1.DomHandler]
+            providers: [domhandler_1.DomHandler, SPINNER_VALUE_ACCESSOR]
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, domhandler_1.DomHandler])
     ], Spinner);

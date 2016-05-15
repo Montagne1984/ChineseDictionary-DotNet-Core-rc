@@ -26,12 +26,12 @@ var Fieldset = (function () {
     };
     Fieldset.prototype.toggle = function (event) {
         if (this.toggleable) {
-            this.onBeforeToggle.next({ originalEvent: event, collapsed: this.collapsed });
+            this.onBeforeToggle.emit({ originalEvent: event, collapsed: this.collapsed });
             if (this.collapsed)
                 this.expand(event);
             else
                 this.collapse(event);
-            this.onAfterToggle.next({ originalEvent: event, collapsed: this.collapsed });
+            this.onAfterToggle.emit({ originalEvent: event, collapsed: this.collapsed });
         }
     };
     Fieldset.prototype.expand = function (event) {

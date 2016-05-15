@@ -1,16 +1,21 @@
 import { EventEmitter } from 'angular2/core';
-export declare class Rating {
-    value: number;
+import { ControlValueAccessor } from 'angular2/common';
+export declare class Rating implements ControlValueAccessor {
     disabled: boolean;
     readonly: boolean;
     stars: number;
     cancel: boolean;
-    valueChange: EventEmitter<any>;
     onRate: EventEmitter<any>;
     onCancel: EventEmitter<any>;
+    value: number;
+    onModelChange: Function;
+    onModelTouched: Function;
     private starsArray;
     private hoverCancel;
     ngOnInit(): void;
     rate(event: any, i: number): void;
     clear(event: any): void;
+    writeValue(value: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
 }

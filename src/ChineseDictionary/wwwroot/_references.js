@@ -4,6 +4,7 @@
 /// <reference path="app/components/consonant.component.js" />
 /// <reference path="app/components/ipaconsonant.component.js" />
 /// <reference path="app/components/mvc.component.js" />
+/// <reference path="app/components/object.component.js" />
 /// <reference path="app/components/static.component.js" />
 /// <reference path="app/domain/ipaconsonant.js" />
 /// <reference path="app/domain/ipavowel.js" />

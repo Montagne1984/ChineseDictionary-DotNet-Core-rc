@@ -59,4 +59,6 @@ export declare class DoughnutChart implements AfterViewInit, OnDestroy, DoCheck 
     ngOnDestroy(): void;
     onCanvasClick(event: any): void;
     initChart(): void;
+    getCanvas(): any;
+    getBase64Image(): any;
 }

@@ -38,7 +38,7 @@ var TabView = (function () {
                 selectedTab.selected = false;
             }
             tab.selected = true;
-            this.onChange.next({ originalEvent: event, index: this.findTabIndex(tab) });
+            this.onChange.emit({ originalEvent: event, index: this.findTabIndex(tab) });
         }
         event.preventDefault();
     };
@@ -54,7 +54,7 @@ var TabView = (function () {
             }
         }
         tab.closed = true;
-        this.onClose.next({ originalEvent: event, index: this.findTabIndex(tab) });
+        this.onClose.emit({ originalEvent: event, index: this.findTabIndex(tab) });
         event.stopPropagation();
     };
     TabView.prototype.findSelectedTab = function () {
