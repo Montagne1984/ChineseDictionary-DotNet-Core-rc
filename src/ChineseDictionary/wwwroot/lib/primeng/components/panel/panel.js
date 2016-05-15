@@ -15,14 +15,14 @@ var Panel = (function () {
         this.onAfterToggle = new core_1.EventEmitter();
     }
     Panel.prototype.toggle = function (event) {
-        this.onBeforeToggle.next({ originalEvent: event, collapsed: this.collapsed });
+        this.onBeforeToggle.emit({ originalEvent: event, collapsed: this.collapsed });
         if (this.toggleable) {
             if (this.collapsed)
                 this.expand(event);
             else
                 this.collapse(event);
         }
-        this.onAfterToggle.next({ originalEvent: event, collapsed: this.collapsed });
+        this.onAfterToggle.emit({ originalEvent: event, collapsed: this.collapsed });
         event.preventDefault();
     };
     Panel.prototype.expand = function (event) {

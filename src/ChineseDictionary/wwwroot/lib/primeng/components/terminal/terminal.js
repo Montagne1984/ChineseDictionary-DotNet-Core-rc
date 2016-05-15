@@ -32,7 +32,7 @@ var Terminal = (function () {
                 this.commands.push({ text: this.command, response: value });
                 this.command = null;
                 this.commandProcessed = true;
-                this.responseChange.next(null);
+                this.responseChange.emit(null);
             }
         },
         enumerable: true,
@@ -40,7 +40,7 @@ var Terminal = (function () {
     });
     Terminal.prototype.handleCommand = function (event, container) {
         if (event.keyCode == 13) {
-            this.handler.next({ originalEvent: event, command: this.command });
+            this.handler.emit({ originalEvent: event, command: this.command });
         }
     };
     Terminal.prototype.focus = function (element) {

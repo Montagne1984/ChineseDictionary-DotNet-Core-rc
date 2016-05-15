@@ -20,7 +20,7 @@ var Messages = (function () {
         return this.value[0].severity;
     };
     Messages.prototype.clear = function (event) {
-        this.valueChange.next([]);
+        this.valueChange.emit([]);
         event.preventDefault();
     };
     __decorate([

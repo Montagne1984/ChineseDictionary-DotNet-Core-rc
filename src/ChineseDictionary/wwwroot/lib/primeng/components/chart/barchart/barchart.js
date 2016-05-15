@@ -93,7 +93,7 @@ var BarChart = (function () {
         if (this.chart) {
             var activeBars = this.chart.getBarsAtEvent(event);
             if (activeBars) {
-                this.onBarsSelect.next({ originalEvent: event, bars: activeBars });
+                this.onBarsSelect.emit({ originalEvent: event, bars: activeBars });
             }
         }
     };
@@ -151,6 +151,12 @@ var BarChart = (function () {
                 this.legend.innerHTML = this.chart.generateLegend();
             }
         }
+    };
+    BarChart.prototype.getCanvas = function () {
+        return this.el.nativeElement.children[0].children[0];
+    };
+    BarChart.prototype.getBase64Image = function () {
+        return this.chart.toBase64Image();
     };
     __decorate([
         core_1.Input(), 
