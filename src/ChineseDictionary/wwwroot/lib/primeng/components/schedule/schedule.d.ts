@@ -1,14 +1,13 @@
-import { ElementRef, EventEmitter, IterableDiffers } from 'angular2/core';
+import { ElementRef, EventEmitter, IterableDiffers } from '@angular/core';
 export declare class Schedule {
     private el;
     events: any[];
     header: any;
-    style: string;
+    style: any;
     styleClass: string;
     rtl: boolean;
     weekends: boolean;
     hiddenDays: number[];
-    lang: string;
     fixedWeekCount: boolean;
     weekNumbers: boolean;
     businessHours: any;
@@ -35,6 +34,7 @@ export declare class Schedule {
     dragScroll: boolean;
     eventOverlap: any;
     eventConstraint: any;
+    locale: any;
     onDayClick: EventEmitter<any>;
     onEventClick: EventEmitter<any>;
     onEventMouseover: EventEmitter<any>;

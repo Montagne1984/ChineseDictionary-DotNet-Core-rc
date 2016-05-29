@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var PieChart = (function () {
     function PieChart(el, differs) {
         this.el = el;
@@ -82,7 +83,7 @@ var PieChart = (function () {
         if (this.chart) {
             var segs = this.chart.getSegmentsAtEvent(event);
             if (segs) {
-                this.onSegmentsSelect.next({ originalEvent: event, segments: segs });
+                this.onSegmentsSelect.emit({ originalEvent: event, segments: segs });
             }
         }
     };
@@ -138,6 +139,12 @@ var PieChart = (function () {
                 this.legend.innerHTML = this.chart.generateLegend();
             }
         }
+    };
+    PieChart.prototype.getCanvas = function () {
+        return this.el.nativeElement.children[0].children[0];
+    };
+    PieChart.prototype.getBase64Image = function () {
+        return this.chart.toBase64Image();
     };
     __decorate([
         core_1.Input(), 
@@ -343,6 +350,6 @@ var PieChart = (function () {
         __metadata('design:paramtypes', [core_1.ElementRef, core_1.IterableDiffers])
     ], PieChart);
     return PieChart;
-})();
+}());
 exports.PieChart = PieChart;
 //# sourceMappingURL=piechart.js.map

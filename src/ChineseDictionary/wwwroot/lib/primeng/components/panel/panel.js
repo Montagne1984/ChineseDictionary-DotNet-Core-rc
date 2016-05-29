@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var Panel = (function () {
     function Panel() {
         this.collapsed = false;
@@ -15,14 +16,14 @@ var Panel = (function () {
         this.onAfterToggle = new core_1.EventEmitter();
     }
     Panel.prototype.toggle = function (event) {
-        this.onBeforeToggle.next({ originalEvent: event, collapsed: this.collapsed });
+        this.onBeforeToggle.emit({ originalEvent: event, collapsed: this.collapsed });
         if (this.toggleable) {
             if (this.collapsed)
                 this.expand(event);
             else
                 this.collapse(event);
         }
-        this.onAfterToggle.next({ originalEvent: event, collapsed: this.collapsed });
+        this.onAfterToggle.emit({ originalEvent: event, collapsed: this.collapsed });
         event.preventDefault();
     };
     Panel.prototype.expand = function (event) {
@@ -45,7 +46,7 @@ var Panel = (function () {
     ], Panel.prototype, "collapsed", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], Panel.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -62,11 +63,11 @@ var Panel = (function () {
     Panel = __decorate([
         core_1.Component({
             selector: 'p-panel',
-            template: "\n        <div [ngClass]=\"'ui-panel ui-widget ui-widget-content ui-corner-all'\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <div class=\"ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all\">\n                <span class=\"ui-panel-title\">{{header}}</span>\n                <a *ngIf=\"toggleable\" class=\"ui-panel-titlebar-icon ui-panel-titlebar-toggler ui-corner-all ui-state-default\" href=\"#\"\n                    [ngClass]=\"{'ui-state-hover':hoverToggler}\" (mouseenter)=\"hoverToggler=true\" (mouseleave)=\"hoverToggler=false\" (click)=\"toggle($event)\">\n                    <span class=\"fa fa-fw\" [ngClass]=\"{'fa-minus': !collapsed,'fa-plus':collapsed}\"></span>\n                </a>\n            </div>\n            <div class=\"ui-panel-content ui-widget-content\" [style.display]=\"collapsed ? 'none' : 'block'\">\n                <ng-content></ng-content>\n            </div>\n        </div>\n    "
+            template: "\n        <div [ngClass]=\"'ui-panel ui-widget ui-widget-content ui-corner-all'\" [ngStyle]=\"style\" [class]=\"styleClass\">\n            <div class=\"ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all\">\n                <span class=\"ui-panel-title\" *ngIf=\"header\">{{header}}</span>\n                <ng-content select=\"header\"></ng-content>\n                <a *ngIf=\"toggleable\" class=\"ui-panel-titlebar-icon ui-panel-titlebar-toggler ui-corner-all ui-state-default\" href=\"#\"\n                    [ngClass]=\"{'ui-state-hover':hoverToggler}\" (mouseenter)=\"hoverToggler=true\" (mouseleave)=\"hoverToggler=false\" (click)=\"toggle($event)\">\n                    <span class=\"fa fa-fw\" [ngClass]=\"{'fa-minus': !collapsed,'fa-plus':collapsed}\"></span>\n                </a>\n            </div>\n            <div class=\"ui-panel-content ui-widget-content\" [style.display]=\"collapsed ? 'none' : 'block'\">\n                <ng-content></ng-content>\n            </div>\n        </div>\n    "
         }), 
         __metadata('design:paramtypes', [])
     ], Panel);
     return Panel;
-})();
+}());
 exports.Panel = Panel;
 //# sourceMappingURL=panel.js.map

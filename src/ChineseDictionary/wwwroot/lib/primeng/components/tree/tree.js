@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var uitreenode_1 = require('./uitreenode');
 var Tree = (function () {
     function Tree() {
@@ -27,24 +28,24 @@ var Tree = (function () {
             var selected = (index >= 0);
             if (selected && metaKey) {
                 if (this.isSingleSelectionMode()) {
-                    this.selectionChange.next(null);
+                    this.selectionChange.emit(null);
                 }
                 else {
                     this.selection.splice(index, 1);
-                    this.selectionChange.next(this.selection);
+                    this.selectionChange.emit(this.selection);
                 }
-                this.onNodeUnselect.next({ originalEvent: event, node: node });
+                this.onNodeUnselect.emit({ originalEvent: event, node: node });
             }
             else {
                 if (this.isSingleSelectionMode()) {
-                    this.selectionChange.next(node);
+                    this.selectionChange.emit(node);
                 }
                 else if (this.isMultipleSelectionMode()) {
                     this.selection = (!event.metaKey) ? [] : this.selection || [];
                     this.selection.push(node);
-                    this.selectionChange.next(this.selection);
+                    this.selectionChange.emit(this.selection);
                 }
-                this.onNodeSelect.next({ originalEvent: event, node: node });
+                this.onNodeSelect.emit({ originalEvent: event, node: node });
             }
         }
     };
@@ -108,7 +109,7 @@ var Tree = (function () {
     ], Tree.prototype, "onNodeCollapse", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], Tree.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -121,12 +122,12 @@ var Tree = (function () {
     Tree = __decorate([
         core_1.Component({
             selector: 'p-tree',
-            template: "\n        <div [ngClass]=\"'ui-tree ui-widget ui-widget-content ui-corner-all'\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <ul class=\"ui-tree-container\">\n                <p-treeNode *ngFor=\"#node of value\" [node]=\"node\"></p-treeNode>\n            </ul>\n        </div>\n    ",
+            template: "\n        <div [ngClass]=\"'ui-tree ui-widget ui-widget-content ui-corner-all'\" [ngStyle]=\"style\" [class]=\"styleClass\">\n            <ul class=\"ui-tree-container\">\n                <p-treeNode *ngFor=\"let node of value\" [node]=\"node\"></p-treeNode>\n            </ul>\n        </div>\n    ",
             directives: [uitreenode_1.UITreeNode]
         }), 
         __metadata('design:paramtypes', [])
     ], Tree);
     return Tree;
-})();
+}());
 exports.Tree = Tree;
 //# sourceMappingURL=tree.js.map

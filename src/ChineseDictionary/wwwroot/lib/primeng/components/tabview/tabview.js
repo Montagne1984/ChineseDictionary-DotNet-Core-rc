@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var tabpanel_1 = require('./tabpanel');
 var TabView = (function () {
     function TabView(el, tabPanels) {
@@ -38,7 +39,7 @@ var TabView = (function () {
                 selectedTab.selected = false;
             }
             tab.selected = true;
-            this.onChange.next({ originalEvent: event, index: this.findTabIndex(tab) });
+            this.onChange.emit({ originalEvent: event, index: this.findTabIndex(tab) });
         }
         event.preventDefault();
     };
@@ -54,7 +55,7 @@ var TabView = (function () {
             }
         }
         tab.closed = true;
-        this.onClose.next({ originalEvent: event, index: this.findTabIndex(tab) });
+        this.onClose.emit({ originalEvent: event, index: this.findTabIndex(tab) });
         event.stopPropagation();
     };
     TabView.prototype.findSelectedTab = function () {
@@ -88,7 +89,7 @@ var TabView = (function () {
     ], TabView.prototype, "orientation", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], TabView.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -105,12 +106,12 @@ var TabView = (function () {
     TabView = __decorate([
         core_1.Component({
             selector: 'p-tabView',
-            template: "\n        <div [ngClass]=\"'ui-tabview ui-widget ui-widget-content ui-corner-all ui-tabview-' + orientation\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <ul class=\"ui-tabview-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all\">\n                <template ngFor #tab [ngForOf]=\"tabs\">\n                    <li [attr.class]=\"getDefaultHeaderClass(tab)\" [attr.style]=\"tab.headerStyle\"\n                        [ngClass]=\"{'ui-tabview-selected ui-state-active': tab.selected, 'ui-state-hover': tab.hoverHeader&&!tab.disabled, 'ui-state-disabled': tab.disabled}\"\n                        (mouseenter)=\"tab.hoverHeader=true\" (mouseleave)=\"tab.hoverHeader=false\" (click)=\"open($event,tab)\" *ngIf=\"!tab.closed\">\n                        <a href=\"#\">{{tab.header}}</a><span *ngIf=\"tab.closable\" class=\"fa fa-close\" (click)=\"close($event,tab)\"></span>\n                    </li>\n                </template>\n            </ul>\n            <div class=\"ui-tabview-panels\">\n                <ng-content></ng-content>\n            </div>\n        </div>\n    ",
+            template: "\n        <div [ngClass]=\"'ui-tabview ui-widget ui-widget-content ui-corner-all ui-tabview-' + orientation\" [ngStyle]=\"style\" [class]=\"styleClass\">\n            <ul class=\"ui-tabview-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all\">\n                <template ngFor let-tab [ngForOf]=\"tabs\">\n                    <li [class]=\"getDefaultHeaderClass(tab)\" [ngStyle]=\"tab.headerStyle\"\n                        [ngClass]=\"{'ui-tabview-selected ui-state-active': tab.selected, 'ui-state-hover': tab.hoverHeader&&!tab.disabled, 'ui-state-disabled': tab.disabled}\"\n                        (mouseenter)=\"tab.hoverHeader=true\" (mouseleave)=\"tab.hoverHeader=false\" (click)=\"open($event,tab)\" *ngIf=\"!tab.closed\">\n                        <a href=\"#\">{{tab.header}}</a><span *ngIf=\"tab.closable\" class=\"fa fa-close\" (click)=\"close($event,tab)\"></span>\n                    </li>\n                </template>\n            </ul>\n            <div class=\"ui-tabview-panels\">\n                <ng-content></ng-content>\n            </div>\n        </div>\n    ",
         }),
         __param(1, core_1.Query(tabpanel_1.TabPanel)), 
         __metadata('design:paramtypes', [core_1.ElementRef, core_1.QueryList])
     ], TabView);
     return TabView;
-})();
+}());
 exports.TabView = TabView;
 //# sourceMappingURL=tabview.js.map

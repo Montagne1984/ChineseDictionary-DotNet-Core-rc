@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var BarChart = (function () {
     function BarChart(el, differs) {
         this.el = el;
@@ -93,7 +94,7 @@ var BarChart = (function () {
         if (this.chart) {
             var activeBars = this.chart.getBarsAtEvent(event);
             if (activeBars) {
-                this.onBarsSelect.next({ originalEvent: event, bars: activeBars });
+                this.onBarsSelect.emit({ originalEvent: event, bars: activeBars });
             }
         }
     };
@@ -145,12 +146,19 @@ var BarChart = (function () {
                 barShowStroke: this.barShowStroke,
                 barStrokeWidth: this.barStrokeWidth,
                 barValueSpacing: this.barValueSpacing,
-                barDatasetSpacing: this.barDatasetSpacing
+                barDatasetSpacing: this.barDatasetSpacing,
+                legendTemplate: this.legendTemplate
             });
             if (this.legend) {
                 this.legend.innerHTML = this.chart.generateLegend();
             }
         }
+    };
+    BarChart.prototype.getCanvas = function () {
+        return this.el.nativeElement.children[0].children[0];
+    };
+    BarChart.prototype.getBase64Image = function () {
+        return this.chart.toBase64Image();
     };
     __decorate([
         core_1.Input(), 
@@ -368,6 +376,6 @@ var BarChart = (function () {
         __metadata('design:paramtypes', [core_1.ElementRef, core_1.IterableDiffers])
     ], BarChart);
     return BarChart;
-})();
+}());
 exports.BarChart = BarChart;
 //# sourceMappingURL=barchart.js.map

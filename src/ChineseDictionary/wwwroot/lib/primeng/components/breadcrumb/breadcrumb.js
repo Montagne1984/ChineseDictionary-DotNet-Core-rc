@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,34 +8,54 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
+var common_1 = require('@angular/common');
+var router_deprecated_1 = require('@angular/router-deprecated');
 var Breadcrumb = (function () {
-    function Breadcrumb(el) {
-        this.el = el;
-        this.initialized = false;
+    function Breadcrumb(router, location) {
+        this.router = router;
+        this.location = location;
     }
-    Breadcrumb.prototype.ngAfterViewInit = function () {
-        this.menuElement = jQuery(this.el.nativeElement).find('> div > ul');
-        this.menuElement.puibreadcrumb({
-            enhanced: true
-        });
-        this.initialized = true;
-    };
-    Breadcrumb.prototype.ngOnChanges = function (changes) {
-        if (this.initialized) {
-            for (var key in changes) {
-                this.menuElement.puibreadcrumb('option', key, changes[key].currentValue);
+    Breadcrumb.prototype.itemClick = function (event, item) {
+        if (item.command) {
+            if (!item.eventEmitter) {
+                item.eventEmitter = new core_1.EventEmitter();
+                item.eventEmitter.subscribe(item.command);
             }
+            item.eventEmitter.emit(event);
+        }
+        if (!item.url) {
+            event.preventDefault();
+        }
+    };
+    Breadcrumb.prototype.getItemUrl = function (item) {
+        if (item.url) {
+            if (Array.isArray(item.url))
+                return this.location.prepareExternalUrl(this.router.generate(item.url).toLinkUrl());
+            else
+                return item.url;
+        }
+        else {
+            return '#';
         }
     };
     Breadcrumb.prototype.ngOnDestroy = function () {
-        this.menuElement.puibreadcrumb('destroy');
-        this.initialized = false;
-        this.menuElement = null;
+        if (this.model) {
+            for (var _i = 0, _a = this.model; _i < _a.length; _i++) {
+                var item = _a[_i];
+                if (item.eventEmitter) {
+                    item.eventEmitter.unsubscribe();
+                }
+            }
+        }
     };
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Array)
+    ], Breadcrumb.prototype, "model", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
     ], Breadcrumb.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -43,11 +64,11 @@ var Breadcrumb = (function () {
     Breadcrumb = __decorate([
         core_1.Component({
             selector: 'p-breadcrumb',
-            template: "\n        <div [attr.class]=\"styleClass\" [attr.style]=\"style\" [ngClass]=\"{'ui-breadcrumb ui-widget ui-widget-header ui-helper-clearfix ui-corner-all':true}\">\n            <ng-content></ng-content>\n        </div>\n    "
+            template: "\n        <div [class]=\"styleClass\" [ngStyle]=\"style\" [ngClass]=\"'ui-breadcrumb ui-widget ui-widget-header ui-helper-clearfix ui-corner-all'\">\n            <ul>\n                <li class=\"fa fa-home\"></li>\n                <template ngFor let-item let-end=\"last\" [ngForOf]=\"model\">\n                    <li role=\"menuitem\">\n                        <a [href]=\"getItemUrl(item)\" class=\"ui-menuitem-link\" (click)=\"itemClick($event, item)\">\n                            <span class=\"ui-menuitem-text\">{{item.label}}</span>\n                        </a>\n                    </li>\n                    <li class=\"ui-breadcrumb-chevron fa fa-chevron-right\" *ngIf=\"!end\"></li>\n                </template>\n            </ul>\n        </div>\n    "
         }), 
-        __metadata('design:paramtypes', [core_1.ElementRef])
+        __metadata('design:paramtypes', [router_deprecated_1.Router, common_1.Location])
     ], Breadcrumb);
     return Breadcrumb;
-})();
+}());
 exports.Breadcrumb = Breadcrumb;
 //# sourceMappingURL=breadcrumb.js.map

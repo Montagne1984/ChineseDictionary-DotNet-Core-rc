@@ -1,10 +1,9 @@
-import { ElementRef, AfterViewInit, EventEmitter } from 'angular2/core';
+import { ElementRef, AfterViewInit, EventEmitter } from '@angular/core';
 import { DomHandler } from '../dom/domhandler';
-export declare class Spinner implements AfterViewInit {
+import { ControlValueAccessor } from '@angular/common';
+export declare class Spinner implements AfterViewInit, ControlValueAccessor {
     private el;
     private domHandler;
-    value: number;
-    valueChange: EventEmitter<any>;
     onChange: EventEmitter<any>;
     step: number;
     min: number;
@@ -12,6 +11,9 @@ export declare class Spinner implements AfterViewInit {
     maxlength: number;
     size: number;
     disabled: boolean;
+    value: number;
+    onModelChange: Function;
+    onModelTouched: Function;
     private hoverUp;
     private activeUp;
     private hoverDown;
@@ -37,4 +39,7 @@ export declare class Spinner implements AfterViewInit {
     parseValue(val: string): number;
     handleChange(event: any): void;
     clearTimer(): void;
+    writeValue(value: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
 }

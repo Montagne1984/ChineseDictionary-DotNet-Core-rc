@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var Schedule = (function () {
     function Schedule(el, differs) {
         this.el = el;
@@ -38,13 +39,12 @@ var Schedule = (function () {
     Schedule.prototype.ngAfterViewInit = function () {
         var _this = this;
         this.schedule = jQuery(this.el.nativeElement.children[0]);
-        this.schedule.fullCalendar({
+        var options = {
             theme: true,
             header: this.header,
             isRTL: this.rtl,
             weekends: this.weekends,
             hiddenDays: this.hiddenDays,
-            lang: this.lang,
             fixedWeekCount: this.fixedWeekCount,
             weekNumbers: this.weekNumbers,
             businessHours: this.businessHours,
@@ -75,49 +75,49 @@ var Schedule = (function () {
                 callback(_this.events);
             },
             dayClick: function (date, jsEvent, view) {
-                _this.onDayClick.next({
+                _this.onDayClick.emit({
                     'date': date,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventClick: function (calEvent, jsEvent, view) {
-                _this.onEventClick.next({
+                _this.onEventClick.emit({
                     'calEvent': calEvent,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventMouseover: function (calEvent, jsEvent, view) {
-                _this.onEventMouseover.next({
+                _this.onEventMouseover.emit({
                     'calEvent': calEvent,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventMouseout: function (calEvent, jsEvent, view) {
-                _this.onEventMouseover.next({
+                _this.onEventMouseover.emit({
                     'calEvent': calEvent,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventDragStart: function (event, jsEvent, ui, view) {
-                _this.onEventDragStart.next({
+                _this.onEventDragStart.emit({
                     'event': event,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventDragStop: function (event, jsEvent, ui, view) {
-                _this.onEventDragStop.next({
+                _this.onEventDragStop.emit({
                     'event': event,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
-                _this.onEventDragStop.next({
+                _this.onEventDrop.emit({
                     'event': event,
                     'delta': delta,
                     'revertFunc': revertFunc,
@@ -126,21 +126,21 @@ var Schedule = (function () {
                 });
             },
             eventResizeStart: function (event, jsEvent, ui, view) {
-                _this.onEventResizeStart.next({
+                _this.onEventResizeStart.emit({
                     'event': event,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventResizeStop: function (event, jsEvent, ui, view) {
-                _this.onEventResizeStop.next({
+                _this.onEventResizeStop.emit({
                     'event': event,
                     'jsEvent': jsEvent,
                     'view': view
                 });
             },
             eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-                _this.onEventResize.next({
+                _this.onEventResize.emit({
                     'event': event,
                     'delta': delta,
                     'revertFunc': revertFunc,
@@ -148,12 +148,18 @@ var Schedule = (function () {
                     'view': view
                 });
             }
-        });
+        };
+        if (this.locale) {
+            for (var prop in this.locale) {
+                options[prop] = this.locale[prop];
+            }
+        }
+        this.schedule.fullCalendar(options);
         this.initialized = true;
     };
     Schedule.prototype.ngDoCheck = function () {
         var changes = this.differ.diff(this.events);
-        if (changes) {
+        if (this.schedule && changes) {
             this.schedule.fullCalendar('refetchEvents');
         }
     };
@@ -172,7 +178,7 @@ var Schedule = (function () {
     ], Schedule.prototype, "header", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], Schedule.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -190,10 +196,6 @@ var Schedule = (function () {
         core_1.Input(), 
         __metadata('design:type', Array)
     ], Schedule.prototype, "hiddenDays", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', String)
-    ], Schedule.prototype, "lang", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Boolean)
@@ -299,6 +301,10 @@ var Schedule = (function () {
         __metadata('design:type', Object)
     ], Schedule.prototype, "eventConstraint", void 0);
     __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], Schedule.prototype, "locale", void 0);
+    __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], Schedule.prototype, "onDayClick", void 0);
@@ -341,11 +347,11 @@ var Schedule = (function () {
     Schedule = __decorate([
         core_1.Component({
             selector: 'p-schedule',
-            template: "\n        <div [attr.style]=\"style\" [attr.class]=\"styleClass\"></div>\n    "
+            template: "\n        <div [ngStyle]=\"style\" [class]=\"styleClass\"></div>\n    "
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, core_1.IterableDiffers])
     ], Schedule);
     return Schedule;
-})();
+}());
 exports.Schedule = Schedule;
 //# sourceMappingURL=schedule.js.map

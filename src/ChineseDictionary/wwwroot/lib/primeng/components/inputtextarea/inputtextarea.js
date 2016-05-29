@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,12 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
-var common_1 = require('angular2/common');
+var core_1 = require('@angular/core');
 var InputTextarea = (function () {
-    function InputTextarea(el, control) {
+    function InputTextarea(el) {
         this.el = el;
-        this.control = control;
     }
     InputTextarea.prototype.ngOnInit = function () {
         this.rowsDefault = this.rows;
@@ -38,9 +37,6 @@ var InputTextarea = (function () {
     };
     InputTextarea.prototype.isDisabled = function () {
         return this.el.nativeElement.disabled;
-    };
-    InputTextarea.prototype.isInvalid = function () {
-        return !this.control.valid;
     };
     InputTextarea.prototype.onKeyup = function (e) {
         if (this.autoResize) {
@@ -101,22 +97,19 @@ var InputTextarea = (function () {
             selector: '[pInputTextarea]',
             host: {
                 '[class.ui-inputtext]': 'true',
-                '[class.ui-inputfield]': 'true',
                 '[class.ui-corner-all]': 'true',
                 '[class.ui-state-default]': 'true',
                 '[class.ui-widget]': 'true',
                 '[class.ui-state-hover]': 'hover',
                 '[class.ui-state-focus]': 'focus',
                 '[class.ui-state-disabled]': 'isDisabled()',
-                '[class.ui-state-error]': 'isInvalid()',
                 '[attr.rows]': 'rows',
                 '[attr.cols]': 'cols'
-            },
-            providers: [common_1.NgModel]
+            }
         }), 
-        __metadata('design:paramtypes', [core_1.ElementRef, common_1.NgModel])
+        __metadata('design:paramtypes', [core_1.ElementRef])
     ], InputTextarea);
     return InputTextarea;
-})();
+}());
 exports.InputTextarea = InputTextarea;
 //# sourceMappingURL=inputtextarea.js.map

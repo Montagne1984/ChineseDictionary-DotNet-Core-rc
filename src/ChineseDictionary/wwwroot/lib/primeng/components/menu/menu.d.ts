@@ -1,19 +1,29 @@
-import { ElementRef, SimpleChange } from 'angular2/core';
-export declare class Menu {
+import { ElementRef, AfterViewInit, OnDestroy, Renderer } from '@angular/core';
+import { DomHandler } from '../dom/domhandler';
+import { MenuItem } from '../api/menumodel';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router-deprecated';
+export declare class Menu implements AfterViewInit, OnDestroy {
     private el;
+    private domHandler;
+    private renderer;
+    private router;
+    private location;
+    model: MenuItem[];
     popup: boolean;
-    trigger: any;
-    my: string;
-    at: string;
-    triggerEvent: string;
-    style: string;
+    style: any;
     styleClass: string;
-    initialized: boolean;
-    menuElement: any;
-    constructor(el: ElementRef);
+    container: any;
+    documentClickListener: any;
+    preventDocumentDefault: any;
+    constructor(el: ElementRef, domHandler: DomHandler, renderer: Renderer, router: Router, location: Location);
     ngAfterViewInit(): void;
-    ngOnChanges(changes: {
-        [key: string]: SimpleChange;
-    }): void;
+    toggle(event: any): void;
+    show(event: any): void;
+    hide(): void;
+    itemClick(event: any, item: MenuItem): void;
     ngOnDestroy(): void;
+    hasSubMenu(): boolean;
+    unsubscribe(item: any): void;
+    getItemUrl(item: MenuItem): string;
 }

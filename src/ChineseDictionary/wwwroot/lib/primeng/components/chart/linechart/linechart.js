@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var LineChart = (function () {
     function LineChart(el, differs) {
         this.el = el;
@@ -98,7 +99,7 @@ var LineChart = (function () {
         if (this.chart) {
             var activePoints = this.chart.getPointsAtEvent(event);
             if (activePoints) {
-                this.onPointsSelect.next({ originalEvent: event, points: activePoints });
+                this.onPointsSelect.emit({ originalEvent: event, points: activePoints });
             }
         }
     };
@@ -155,12 +156,19 @@ var LineChart = (function () {
                 pointHitDetectionRadius: this.pointHitDetectionRadius,
                 datasetStroke: this.datasetStroke,
                 datasetStrokeWidth: this.datasetStrokeWidth,
-                datasetFill: this.datasetFill
+                datasetFill: this.datasetFill,
+                legendTemplate: this.legendTemplate
             });
             if (this.legend) {
                 this.legend.innerHTML = this.chart.generateLegend();
             }
         }
+    };
+    LineChart.prototype.getCanvas = function () {
+        return this.el.nativeElement.children[0].children[0];
+    };
+    LineChart.prototype.getBase64Image = function () {
+        return this.chart.toBase64Image();
     };
     __decorate([
         core_1.Input(), 
@@ -398,6 +406,6 @@ var LineChart = (function () {
         __metadata('design:paramtypes', [core_1.ElementRef, core_1.IterableDiffers])
     ], LineChart);
     return LineChart;
-})();
+}());
 exports.LineChart = LineChart;
 //# sourceMappingURL=linechart.js.map

@@ -5,58 +5,60 @@ export abstract class ObjectComponent implements OnInit {
 
     displayDialog: boolean;
 
-    item: Object = new Object();
+    //item: Object = new Object();
 
-    selectedItem: Object;
+    //selectedItem: Object;
 
     newItem: boolean;
 
-    items: Object[];
+    //items: Object[];
 
-    constructor(private objectService: IObjectService) { }
+    constructor() { }
 
     ngOnInit() {
-        this.objectService.get().then(items => this.items = items);
+        //this.objectService.get().then(items => this.items = items);
+        //this.items = [];
     }
 
     showDialogToAdd() {
-        this.newItem = true;
-        this.item = new Object();
-        this.displayDialog = true;
+        //this.newItem = true;
+        //this.item = new Object();
+        //this.displayDialog = true;
     }
 
     save() {
-        if (this.newItem)
-            this.items.push(this.item);
-        else
-            this.items[this.findSelectedItemIndex()] = this.item;
+        //if (this.newItem)
+        //    this.items.push(this.item);
+        //else
+        //    this.items[this.findSelectedItemIndex()] = this.item;
 
-        this.item = null;
-        this.displayDialog = false;
+        //this.item = null;
+        //this.displayDialog = false;
     }
 
     delete() {
-        this.items.splice(this.findSelectedItemIndex(), 1);
-        this.item = null;
-        this.displayDialog = false;
+        //this.items.splice(this.findSelectedItemIndex(), 1);
+        //this.item = null;
+        //this.displayDialog = false;
     }
 
     onRowSelect(event) {
-        this.newItem = false;
-        this.item = this.cloneItem(event.data);
-        this.displayDialog = true;
+        //this.newItem = false;
+        //this.item = this.cloneItem(event.data);
+        //this.displayDialog = true;
     }
 
-    cloneItem(i: Object): Object {
-        let item = new Object();
-        for (let prop in i) {
-            item[prop] = i[prop];
-        }
-        return item;
-    }
+    //cloneItem(i: Object): Object {
+    //    let item = new Object();
+    //    //for (let prop in i) {
+    //    //    item[prop] = i[prop];
+    //    //}
+    //    return item;
+    //}
 
     findSelectedItemIndex(): number {
-        return this.items.indexOf(this.selectedItem);
+        //return this.items.indexOf(this.selectedItem);
+        return 0;
     }
 }
 

@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,15 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var ColumnTemplateLoader = (function () {
     function ColumnTemplateLoader(viewContainer) {
         this.viewContainer = viewContainer;
     }
     ColumnTemplateLoader.prototype.ngOnInit = function () {
-        var view = this.viewContainer.createEmbeddedView(this.column.template);
-        view.setLocal('\$implicit', this.column);
-        view.setLocal('rowData', this.rowData);
+        var view = this.viewContainer.createEmbeddedView(this.column.template, {
+            '\$implicit': this.column,
+            'rowData': this.rowData,
+            'rowIndex': this.rowIndex
+        });
     };
     __decorate([
         core_1.Input(), 
@@ -25,6 +28,10 @@ var ColumnTemplateLoader = (function () {
         core_1.Input(), 
         __metadata('design:type', Object)
     ], ColumnTemplateLoader.prototype, "rowData", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Number)
+    ], ColumnTemplateLoader.prototype, "rowIndex", void 0);
     ColumnTemplateLoader = __decorate([
         core_1.Component({
             selector: 'p-columnTemplateLoader',
@@ -33,6 +40,6 @@ var ColumnTemplateLoader = (function () {
         __metadata('design:paramtypes', [core_1.ViewContainerRef])
     ], ColumnTemplateLoader);
     return ColumnTemplateLoader;
-})();
+}());
 exports.ColumnTemplateLoader = ColumnTemplateLoader;
 //# sourceMappingURL=columntemplateloader.js.map

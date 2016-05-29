@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var domhandler_1 = require('../dom/domhandler');
 var Button = (function () {
     function Button(el, domHandler) {
@@ -27,6 +28,7 @@ var Button = (function () {
         labelElement.className = 'ui-button-text ui-c';
         labelElement.appendChild(document.createTextNode(this.label || 'ui-button'));
         this.el.nativeElement.appendChild(labelElement);
+        this.initialized = true;
     };
     Button.prototype.onMouseover = function (e) {
         this.hover = true;
@@ -53,7 +55,7 @@ var Button = (function () {
     Button.prototype.getStyleClass = function () {
         var styleClass = 'ui-button ui-widget ui-state-default ui-corner-all';
         if (this.icon) {
-            if (this.label) {
+            if (this.label != null && this.label != undefined) {
                 if (this.iconPos == 'left')
                     styleClass = styleClass + ' ui-button-text-icon-left';
                 else
@@ -68,10 +70,24 @@ var Button = (function () {
         }
         return styleClass;
     };
+    Object.defineProperty(Button.prototype, "label", {
+        get: function () {
+            return this._label;
+        },
+        set: function (val) {
+            this._label = val;
+            if (this.initialized) {
+                this.domHandler.findSingle(this.el.nativeElement, '.ui-button-text').textContent = this._label;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Button.prototype.ngOnDestroy = function () {
         while (this.el.nativeElement.hasChildNodes()) {
             this.el.nativeElement.removeChild(this.el.nativeElement.lastChild);
         }
+        this.initialized = false;
     };
     __decorate([
         core_1.Input(), 
@@ -81,10 +97,6 @@ var Button = (function () {
         core_1.Input(), 
         __metadata('design:type', String)
     ], Button.prototype, "iconPos", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', String)
-    ], Button.prototype, "label", void 0);
     __decorate([
         core_1.HostListener('mouseover', ['$event']), 
         __metadata('design:type', Function), 
@@ -121,6 +133,10 @@ var Button = (function () {
         __metadata('design:paramtypes', [Object]), 
         __metadata('design:returntype', void 0)
     ], Button.prototype, "onBlur", null);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', String)
+    ], Button.prototype, "label", null);
     Button = __decorate([
         core_1.Directive({
             selector: '[pButton]',
@@ -135,6 +151,6 @@ var Button = (function () {
         __metadata('design:paramtypes', [core_1.ElementRef, domhandler_1.DomHandler])
     ], Button);
     return Button;
-})();
+}());
 exports.Button = Button;
 //# sourceMappingURL=button.js.map

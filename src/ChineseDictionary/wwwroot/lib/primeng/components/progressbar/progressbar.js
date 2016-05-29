@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var ProgressBar = (function () {
     function ProgressBar() {
     }
@@ -23,6 +24,6 @@ var ProgressBar = (function () {
         __metadata('design:paramtypes', [])
     ], ProgressBar);
     return ProgressBar;
-})();
+}());
 exports.ProgressBar = ProgressBar;
 //# sourceMappingURL=progressbar.js.map

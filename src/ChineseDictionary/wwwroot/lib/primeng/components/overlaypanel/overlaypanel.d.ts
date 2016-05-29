@@ -1,4 +1,4 @@
-import { OnInit, OnDestroy, EventEmitter, Renderer, ElementRef } from 'angular2/core';
+import { OnInit, OnDestroy, EventEmitter, Renderer, ElementRef } from '@angular/core';
 import { DomHandler } from '../dom/domhandler';
 export declare class OverlayPanel implements OnInit, OnDestroy {
     private el;
@@ -6,7 +6,7 @@ export declare class OverlayPanel implements OnInit, OnDestroy {
     private renderer;
     dismissable: boolean;
     showCloseIcon: boolean;
-    style: string;
+    style: any;
     styleClass: string;
     onBeforeShow: EventEmitter<any>;
     onAfterShow: EventEmitter<any>;
@@ -15,10 +15,15 @@ export declare class OverlayPanel implements OnInit, OnDestroy {
     visible: boolean;
     hoverCloseIcon: boolean;
     documentClickListener: any;
+    selfClick: boolean;
+    targetEvent: boolean;
+    target: any;
     constructor(el: ElementRef, domHandler: DomHandler, renderer: Renderer);
     ngOnInit(): void;
+    toggle(event: any, target?: any): void;
     show(event: any, target?: any): void;
     hide(): void;
+    onPanelClick(): void;
     onCloseClick(event: any): void;
     ngOnDestroy(): void;
 }

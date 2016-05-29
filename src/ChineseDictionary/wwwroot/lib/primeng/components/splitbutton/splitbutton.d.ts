@@ -1,17 +1,21 @@
-import { ElementRef, OnInit, OnDestroy, EventEmitter, QueryList, Renderer } from 'angular2/core';
+import { ElementRef, OnInit, OnDestroy, EventEmitter, QueryList, Renderer } from '@angular/core';
 import { SplitButtonItem } from './splitbuttonitem';
 import { DomHandler } from '../dom/domhandler';
+import { Router } from '@angular/router-deprecated';
+import { Location } from '@angular/common';
 export declare class SplitButton implements OnInit, OnDestroy {
     private el;
     private domHandler;
     private renderer;
+    private router;
+    private location;
     icon: string;
     iconPos: string;
     label: string;
     onClick: EventEmitter<any>;
-    style: string;
+    style: any;
     styleClass: string;
-    menuStyle: string;
+    menuStyle: any;
     menuStyleClass: string;
     items: QueryList<SplitButtonItem>;
     private hoverDefaultBtn;
@@ -23,10 +27,11 @@ export declare class SplitButton implements OnInit, OnDestroy {
     private hoveredItem;
     private menuVisible;
     private documentClickListener;
-    constructor(el: ElementRef, domHandler: DomHandler, renderer: Renderer);
+    constructor(el: ElementRef, domHandler: DomHandler, renderer: Renderer, router: Router, location: Location);
     ngOnInit(): void;
     onDefaultButtonClick(event: any): void;
-    onDropdownClick(event: any, menu: any, defaultbtn: any): void;
+    onDropdownClick(event: any, menu: any, container: any): void;
     onItemClick(event: any, item: SplitButtonItem): void;
+    getItemUrl(item: SplitButtonItem): string;
     ngOnDestroy(): void;
 }

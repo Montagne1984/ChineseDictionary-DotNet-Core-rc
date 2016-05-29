@@ -1,11 +1,12 @@
-import { EventEmitter } from 'angular2/core';
+import { EventEmitter } from '@angular/core';
 export declare class Paginator {
     rows: number;
     first: number;
     pageLinkSize: number;
     onPageChange: EventEmitter<any>;
-    style: string;
+    style: any;
     styleClass: string;
+    rowsPerPageOptions: number[];
     pageLinks: number[];
     _totalRecords: number;
     totalRecords: number;
@@ -20,4 +21,5 @@ export declare class Paginator {
     changePageToPrev(): void;
     changePageToNext(): void;
     changePageToLast(): void;
+    onRppChange(event: any): void;
 }

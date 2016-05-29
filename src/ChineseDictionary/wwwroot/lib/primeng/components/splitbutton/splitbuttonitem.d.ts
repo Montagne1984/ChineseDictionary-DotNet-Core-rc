@@ -1,7 +1,7 @@
-import { EventEmitter } from 'angular2/core';
+import { EventEmitter } from '@angular/core';
 export declare class SplitButtonItem {
     icon: string;
     label: string;
-    url: string;
+    url: any;
     onClick: EventEmitter<any>;
 }

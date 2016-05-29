@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var uitreerow_1 = require('./uitreerow');
 var column_1 = require('../column/column');
 var header_1 = require('../common/header');
@@ -30,24 +31,24 @@ var TreeTable = (function () {
             var selected = (index >= 0);
             if (selected && metaKey) {
                 if (this.isSingleSelectionMode()) {
-                    this.selectionChange.next(null);
+                    this.selectionChange.emit(null);
                 }
                 else {
                     this.selection.splice(index, 1);
-                    this.selectionChange.next(this.selection);
+                    this.selectionChange.emit(this.selection);
                 }
-                this.onNodeUnselect.next({ originalEvent: event, node: node });
+                this.onNodeUnselect.emit({ originalEvent: event, node: node });
             }
             else {
                 if (this.isSingleSelectionMode()) {
-                    this.selectionChange.next(node);
+                    this.selectionChange.emit(node);
                 }
                 else if (this.isMultipleSelectionMode()) {
                     this.selection = (!event.metaKey) ? [] : this.selection || [];
                     this.selection.push(node);
-                    this.selectionChange.next(this.selection);
+                    this.selectionChange.emit(this.selection);
                 }
-                this.onNodeSelect.next({ originalEvent: event, node: node });
+                this.onNodeSelect.emit({ originalEvent: event, node: node });
             }
         }
     };
@@ -122,7 +123,7 @@ var TreeTable = (function () {
     ], TreeTable.prototype, "onNodeCollapse", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], TreeTable.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -143,12 +144,12 @@ var TreeTable = (function () {
     TreeTable = __decorate([
         core_1.Component({
             selector: 'p-treeTable',
-            template: "\n        <div [ngClass]=\"'ui-treetable ui-widget'\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <div class=\"ui-treetable-header ui-widget-header\" *ngIf=\"header\">\n                <ng-content select=\"header\"></ng-content>\n            </div>\n            <div class=\"ui-treetable-tablewrapper\">\n                <table class=\"ui-widget-content\" style=\"border:0 0 1px 0px\">\n                    <thead>\n                        <tr class=\"ui-state-default\">\n                            <th #headerCell *ngFor=\"#col of columns\" [attr.style]=\"col.style\" [attr.class]=\"col.styleClass\" \n                                [ngClass]=\"'ui-state-default ui-unselectable-text'\">\n                                <span class=\"ui-column-title\">{{col.header}}</span>\n                            </th>\n                        </tr>\n                    </thead>\n                    <tfoot *ngIf=\"hasFooter()\">\n                        <tr>\n                            <td *ngFor=\"#col of columns\" [attr.style]=\"col.style\" [attr.class]=\"col.styleClass\" [ngClass]=\"{'ui-state-default':true}\">{{col.footer}}</td>\n                        </tr>\n                    </tfoot>\n                    <tbody pTreeRow *ngFor=\"#node of value\" [node]=\"node\" [level]=\"0\"></tbody>\n                </table>\n            </div>\n            <div class=\"ui-treetable-footer ui-widget-header\" *ngIf=\"footer\">\n                <ng-content select=\"footer\"></ng-content>\n            </div>\n        </div>\n    ",
+            template: "\n        <div [ngClass]=\"'ui-treetable ui-widget'\" [ngStyle]=\"style\" [class]=\"styleClass\">\n            <div class=\"ui-treetable-header ui-widget-header\" *ngIf=\"header\">\n                <ng-content select=\"header\"></ng-content>\n            </div>\n            <div class=\"ui-treetable-tablewrapper\">\n                <table class=\"ui-widget-content\" style=\"border:0 0 1px 0px\">\n                    <thead>\n                        <tr class=\"ui-state-default\">\n                            <th #headerCell *ngFor=\"let col of columns\" [ngStyle]=\"col.style\" [class]=\"col.styleClass\" \n                                [ngClass]=\"'ui-state-default ui-unselectable-text'\">\n                                <span class=\"ui-column-title\">{{col.header}}</span>\n                            </th>\n                        </tr>\n                    </thead>\n                    <tfoot *ngIf=\"hasFooter()\">\n                        <tr>\n                            <td *ngFor=\"let col of columns\" [ngStyle]=\"col.style\" [class]=\"col.styleClass\" [ngClass]=\"{'ui-state-default':true}\">{{col.footer}}</td>\n                        </tr>\n                    </tfoot>\n                    <tbody pTreeRow *ngFor=\"let node of value\" [node]=\"node\" [level]=\"0\"></tbody>\n                </table>\n            </div>\n            <div class=\"ui-treetable-footer ui-widget-header\" *ngIf=\"footer\">\n                <ng-content select=\"footer\"></ng-content>\n            </div>\n        </div>\n    ",
             directives: [uitreerow_1.UITreeRow]
         }), 
         __metadata('design:paramtypes', [])
     ], TreeTable);
     return TreeTable;
-})();
+}());
 exports.TreeTable = TreeTable;
 //# sourceMappingURL=treetable.js.map

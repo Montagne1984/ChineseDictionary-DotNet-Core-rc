@@ -1,12 +1,19 @@
-import { EventEmitter } from 'angular2/core';
-export declare class RadioButton {
+import { EventEmitter } from '@angular/core';
+import { ControlValueAccessor } from '@angular/common';
+export declare class RadioButton implements ControlValueAccessor {
     value: any;
     name: string;
     disabled: boolean;
-    model: any;
     click: EventEmitter<any>;
-    modelChange: EventEmitter<any>;
-    hover: boolean;
+    model: any;
+    onModelChange: Function;
+    onModelTouched: Function;
+    checked: boolean;
+    private hover;
     onclick(): void;
-    isChecked(): boolean;
+    onMouseEnter(): void;
+    onMouseLeave(): void;
+    writeValue(model: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
 }

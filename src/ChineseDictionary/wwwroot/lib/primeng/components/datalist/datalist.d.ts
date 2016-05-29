@@ -1,4 +1,4 @@
-import { ElementRef, AfterViewInit, DoCheck, EventEmitter, IterableDiffers, TemplateRef } from 'angular2/core';
+import { ElementRef, AfterViewInit, DoCheck, EventEmitter, IterableDiffers, TemplateRef } from '@angular/core';
 export declare class DataList implements AfterViewInit, DoCheck {
     private el;
     value: any[];
@@ -6,13 +6,14 @@ export declare class DataList implements AfterViewInit, DoCheck {
     rows: number;
     totalRecords: number;
     pageLinks: number;
+    rowsPerPageOptions: number[];
     lazy: boolean;
     onLazyLoad: EventEmitter<any>;
-    style: string;
+    style: any;
     styleClass: string;
     header: any;
     footer: any;
-    itemTemplate: TemplateRef;
+    itemTemplate: TemplateRef<any>;
     private dataToRender;
     private first;
     private page;

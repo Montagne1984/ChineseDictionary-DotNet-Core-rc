@@ -1,22 +1,26 @@
-import { ElementRef, AfterViewChecked, EventEmitter, TemplateRef, IterableDiffers } from 'angular2/core';
+import { ElementRef, AfterViewChecked, EventEmitter, TemplateRef, IterableDiffers } from '@angular/core';
 import { SelectItem } from '../api/selectitem';
 import { DomHandler } from '../dom/domhandler';
-export declare class Listbox implements AfterViewChecked {
+import { ControlValueAccessor } from '@angular/common';
+export declare class Listbox implements AfterViewChecked, ControlValueAccessor {
     private el;
     private domHandler;
     options: SelectItem[];
     multiple: boolean;
-    style: string;
+    style: any;
     styleClass: string;
     disabled: string;
-    valueChange: EventEmitter<any>;
     onChange: EventEmitter<any>;
-    itemTemplate: TemplateRef;
-    _value: any;
+    itemTemplate: TemplateRef<any>;
+    value: any;
+    onModelChange: Function;
+    onModelTouched: Function;
     differ: any;
     valueChanged: boolean;
-    value: any;
     constructor(el: ElementRef, domHandler: DomHandler, differs: IterableDiffers);
+    writeValue(value: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
     ngDoCheck(): void;
     ngAfterViewChecked(): void;
     preselect(): void;

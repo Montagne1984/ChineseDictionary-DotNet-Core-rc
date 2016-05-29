@@ -1,20 +1,39 @@
-import { ElementRef, SimpleChange } from 'angular2/core';
-export declare class TieredMenu {
+import { ElementRef, AfterViewInit, OnDestroy, Renderer } from '@angular/core';
+import { DomHandler } from '../dom/domhandler';
+import { MenuItem } from '../api/menumodel';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router-deprecated';
+export declare class TieredMenuSub {
+    private domHandler;
+    private router;
+    private location;
+    item: MenuItem;
+    root: boolean;
+    constructor(domHandler: DomHandler, router: Router, location: Location);
+    activeItem: any;
+    activeLink: any;
+    onItemMouseEnter(event: any, item: any): void;
+    onItemMouseLeave(event: any, link: any): void;
+    itemClick(event: any, item: MenuItem): void;
+    listClick(event: any): void;
+    getItemUrl(item: MenuItem): string;
+}
+export declare class TieredMenu implements AfterViewInit, OnDestroy {
     private el;
+    private domHandler;
+    private renderer;
+    model: MenuItem[];
     popup: boolean;
-    trigger: any;
-    my: string;
-    at: string;
-    triggerEvent: string;
-    autoDisplay: boolean;
-    style: string;
+    style: any;
     styleClass: string;
-    initialized: boolean;
-    menuElement: any;
-    constructor(el: ElementRef);
+    container: any;
+    documentClickListener: any;
+    preventDocumentDefault: any;
+    constructor(el: ElementRef, domHandler: DomHandler, renderer: Renderer);
     ngAfterViewInit(): void;
-    ngOnChanges(changes: {
-        [key: string]: SimpleChange;
-    }): void;
+    toggle(event: any): void;
+    show(event: any): void;
+    hide(): void;
+    unsubscribe(item: any): void;
     ngOnDestroy(): void;
 }

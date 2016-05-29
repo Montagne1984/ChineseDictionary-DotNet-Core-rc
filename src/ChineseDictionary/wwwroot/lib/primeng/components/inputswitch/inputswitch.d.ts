@@ -1,20 +1,35 @@
-import { ElementRef, AfterContentInit, OnDestroy, OnChanges, SimpleChange, EventEmitter } from 'angular2/core';
-export declare class InputSwitch implements AfterContentInit, OnDestroy, OnChanges {
+import { ElementRef, AfterViewInit, EventEmitter } from '@angular/core';
+import { ControlValueAccessor } from '@angular/common';
+import { DomHandler } from '../dom/domhandler';
+export declare class InputSwitch implements ControlValueAccessor, AfterViewInit {
     private el;
+    private domHandler;
     onLabel: string;
     offLabel: string;
-    checked: boolean;
-    style: string;
+    disabled: boolean;
+    style: any;
     styleClass: string;
     onChange: EventEmitter<any>;
-    checkedChange: EventEmitter<any>;
+    checked: boolean;
+    focused: boolean;
+    onModelChange: Function;
+    onModelTouched: Function;
+    private container;
+    private handle;
+    private onContainer;
+    private offContainer;
+    private onLabelChild;
+    private offLabelChild;
+    private offset;
     initialized: boolean;
-    stopNgOnChangesPropagation: boolean;
-    inputSwitchElement: any;
-    constructor(el: ElementRef);
-    ngAfterContentInit(): void;
-    ngOnChanges(changes: {
-        [key: string]: SimpleChange;
-    }): void;
-    ngOnDestroy(): void;
+    constructor(el: ElementRef, domHandler: DomHandler);
+    ngAfterViewInit(): void;
+    toggle(event: any, checkbox: any): void;
+    checkUI(): void;
+    uncheckUI(): void;
+    onFocus(event: any): void;
+    onBlur(event: any): void;
+    writeValue(checked: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
 }

@@ -1,14 +1,15 @@
-import { ElementRef, SimpleChange } from 'angular2/core';
-export declare class Breadcrumb {
-    private el;
-    style: string;
+import { OnDestroy } from '@angular/core';
+import { MenuItem } from '../api/menumodel';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router-deprecated';
+export declare class Breadcrumb implements OnDestroy {
+    private router;
+    private location;
+    model: MenuItem[];
+    style: any;
     styleClass: string;
-    initialized: boolean;
-    menuElement: any;
-    constructor(el: ElementRef);
-    ngAfterViewInit(): void;
-    ngOnChanges(changes: {
-        [key: string]: SimpleChange;
-    }): void;
+    constructor(router: Router, location: Location);
+    itemClick(event: any, item: MenuItem): void;
+    getItemUrl(item: MenuItem): string;
     ngOnDestroy(): void;
 }

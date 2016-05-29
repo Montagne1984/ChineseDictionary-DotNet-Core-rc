@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,13 +8,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
+var common_1 = require('@angular/common');
+var TOGGLEBUTTON_VALUE_ACCESSOR = new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
+    useExisting: core_1.forwardRef(function () { return ToggleButton; }),
+    multi: true
+});
 var ToggleButton = (function () {
     function ToggleButton() {
         this.onLabel = 'Yes';
         this.offLabel = 'No';
         this.onChange = new core_1.EventEmitter();
-        this.checkedChange = new core_1.EventEmitter();
+        this.checked = false;
+        this.onModelChange = function () { };
+        this.onModelTouched = function () { };
     }
     ToggleButton.prototype.getIconClass = function () {
         var baseClass = 'ui-button-icon-left fa fa-fw';
@@ -21,12 +29,23 @@ var ToggleButton = (function () {
     };
     ToggleButton.prototype.toggle = function (event) {
         if (!this.disabled) {
-            this.checkedChange.next(!this.checked);
-            this.onChange.next({
+            this.checked = !this.checked;
+            this.onModelChange(this.checked);
+            this.onModelTouched();
+            this.onChange.emit({
                 originalEvent: event,
-                checked: !this.checked
+                checked: this.checked
             });
         }
+    };
+    ToggleButton.prototype.writeValue = function (value) {
+        this.checked = value;
+    };
+    ToggleButton.prototype.registerOnChange = function (fn) {
+        this.onModelChange = fn;
+    };
+    ToggleButton.prototype.registerOnTouched = function (fn) {
+        this.onModelTouched = fn;
     };
     __decorate([
         core_1.Input(), 
@@ -47,14 +66,10 @@ var ToggleButton = (function () {
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Boolean)
-    ], ToggleButton.prototype, "checked", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Boolean)
     ], ToggleButton.prototype, "disabled", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], ToggleButton.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -64,18 +79,15 @@ var ToggleButton = (function () {
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], ToggleButton.prototype, "onChange", void 0);
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', core_1.EventEmitter)
-    ], ToggleButton.prototype, "checkedChange", void 0);
     ToggleButton = __decorate([
         core_1.Component({
             selector: 'p-toggleButton',
-            template: "\n        <div [ngClass]=\"{'ui-button ui-togglebutton ui-widget ui-state-default ui-corner-all': true, 'ui-button-text-only': (!onIcon&&!offIcon), 'ui-button-text-icon-left': (onIcon&&offIcon),\n                'ui-state-active': checked, 'ui-state-hover': hover&&!disabled, 'ui-state-disabled': disabled}\" [attr.style]=\"style\" [attr.class]=\"styleClass\" \n                (click)=\"toggle($event)\" (mouseenter)=\"hover=true\" (mouseleave)=\"hover=false\">\n            <span *ngIf=\"onIcon||offIcon\" [attr.class]=\"getIconClass()\"></span>\n            <span class=\"ui-button-text ui-unselectable-text\">{{checked ? onLabel : offLabel}}</span>\n        </div>\n    "
+            template: "\n        <div [ngClass]=\"{'ui-button ui-togglebutton ui-widget ui-state-default ui-corner-all': true, 'ui-button-text-only': (!onIcon&&!offIcon), 'ui-button-text-icon-left': (onIcon&&offIcon),\n                'ui-state-active': checked, 'ui-state-hover': hover&&!disabled, 'ui-state-disabled': disabled}\" [ngStyle]=\"style\" [class]=\"styleClass\" \n                (click)=\"toggle($event)\" (mouseenter)=\"hover=true\" (mouseleave)=\"hover=false\">\n            <span *ngIf=\"onIcon||offIcon\" [class]=\"getIconClass()\"></span>\n            <span class=\"ui-button-text ui-unselectable-text\">{{checked ? onLabel : offLabel}}</span>\n        </div>\n    ",
+            providers: [TOGGLEBUTTON_VALUE_ACCESSOR]
         }), 
         __metadata('design:paramtypes', [])
     ], ToggleButton);
     return ToggleButton;
-})();
+}());
 exports.ToggleButton = ToggleButton;
 //# sourceMappingURL=togglebutton.js.map

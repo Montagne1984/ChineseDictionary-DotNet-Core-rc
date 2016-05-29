@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10,9 +11,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var column_1 = require('../column/column');
 var columntemplateloader_1 = require('../column/columntemplateloader');
+var rowexpansionloader_1 = require('./rowexpansionloader');
 var header_1 = require('../common/header');
 var footer_1 = require('../common/footer');
 var paginator_1 = require('../paginator/paginator');
@@ -26,18 +28,27 @@ var DataTable = (function () {
         this.renderer = renderer;
         this.pageLinks = 5;
         this.selectionChange = new core_1.EventEmitter();
+        this.onRowClick = new core_1.EventEmitter();
         this.onRowSelect = new core_1.EventEmitter();
         this.onRowUnselect = new core_1.EventEmitter();
         this.onRowDblclick = new core_1.EventEmitter();
+        this.onContextMenuSelect = new core_1.EventEmitter();
         this.filterDelay = 300;
         this.onLazyLoad = new core_1.EventEmitter();
         this.onColResize = new core_1.EventEmitter();
         this.onColReorder = new core_1.EventEmitter();
         this.sortMode = 'single';
+        this.sortOrder = 1;
+        this.csvSeparator = ',';
         this.onEditInit = new core_1.EventEmitter();
         this.onEditComplete = new core_1.EventEmitter();
         this.onEdit = new core_1.EventEmitter();
         this.onEditCancel = new core_1.EventEmitter();
+        this.onPage = new core_1.EventEmitter();
+        this.onSort = new core_1.EventEmitter();
+        this.onFilter = new core_1.EventEmitter();
+        this.onRowExpand = new core_1.EventEmitter();
+        this.onRowCollapse = new core_1.EventEmitter();
         this.first = 0;
         this.page = 0;
         this.filters = {};
@@ -81,7 +92,7 @@ var DataTable = (function () {
     }
     DataTable.prototype.ngOnInit = function () {
         if (this.lazy) {
-            this.onLazyLoad.next({
+            this.onLazyLoad.emit({
                 first: this.first,
                 rows: this.rows,
                 sortField: this.sortField,
@@ -122,11 +133,14 @@ var DataTable = (function () {
             if (this.paginator) {
                 this.updatePaginator();
             }
-            this.updateDataToRender(this.value);
-            if (!this.lazy && !this.sortedByDefault && (this.sortField || this.multiSortMeta)) {
-                this.sortByDefault();
-                this.sortedByDefault = true;
+            if (!this.lazy && !this.stopSortPropagation && (this.sortField || this.multiSortMeta)) {
+                if (this.sortMode == 'single')
+                    this.sortSingle();
+                else if (this.sortMode == 'multiple')
+                    this.sortMultiple();
             }
+            this.updateDataToRender(this.filteredValue || this.value);
+            this.stopSortPropagation = false;
         }
     };
     DataTable.prototype.resolveFieldData = function (data, field) {
@@ -147,12 +161,6 @@ var DataTable = (function () {
             return null;
         }
     };
-    DataTable.prototype.sortByDefault = function () {
-        if (this.sortMode == 'single')
-            this.sortSingle();
-        else if (this.sortMode == 'multiple')
-            this.sortMultiple();
-    };
     DataTable.prototype.updatePaginator = function () {
         //total records
         this.totalRecords = this.lazy ? this.totalRecords : (this.value ? this.value.length : 0);
@@ -165,12 +173,14 @@ var DataTable = (function () {
     DataTable.prototype.paginate = function (event) {
         this.first = event.first;
         this.rows = event.rows;
-        if (this.lazy) {
-            this.onLazyLoad.next(this.createLazyLoadMetadata());
-        }
-        else {
-            this.updateDataToRender(this.value);
-        }
+        if (this.lazy)
+            this.onLazyLoad.emit(this.createLazyLoadMetadata());
+        else
+            this.updateDataToRender(this.filteredValue || this.value);
+        this.onPage.emit({
+            first: this.first,
+            rows: this.rows
+        });
     };
     DataTable.prototype.updateDataToRender = function (datasource) {
         if (this.paginator && datasource) {
@@ -193,13 +203,14 @@ var DataTable = (function () {
         }
         this.sortOrder = (this.sortField === column.field) ? this.sortOrder * -1 : 1;
         this.sortField = column.field;
+        this.sortColumn = column;
         var metaKey = event.metaKey || event.ctrlKey;
         if (this.lazy) {
-            this.onLazyLoad.next(this.createLazyLoadMetadata());
+            this.onLazyLoad.emit(this.createLazyLoadMetadata());
         }
         else {
             if (this.sortMode == 'multiple') {
-                if (!metaKey) {
+                if (!this.multiSortMeta || !metaKey) {
                     this.multiSortMeta = [];
                 }
                 this.addSortMeta({ field: this.sortField, order: this.sortOrder });
@@ -209,26 +220,40 @@ var DataTable = (function () {
                 this.sortSingle();
             }
         }
+        this.onSort.emit({
+            field: this.sortField,
+            order: this.sortOrder,
+            multisortmeta: this.multiSortMeta
+        });
     };
     DataTable.prototype.sortSingle = function () {
         var _this = this;
         if (this.value) {
-            this.value.sort(function (data1, data2) {
-                var value1 = _this.resolveFieldData(data1, _this.sortField);
-                var value2 = _this.resolveFieldData(data2, _this.sortField);
-                var result = null;
-                if (value1 instanceof String && value2 instanceof String)
-                    result = value1.localeCompare(value2);
-                else
-                    result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
-                return (_this.sortOrder * result);
-            });
+            if (this.sortColumn && this.sortColumn.sortable === 'custom') {
+                this.sortColumn.sortFunction.emit({
+                    field: this.sortField,
+                    order: this.sortOrder
+                });
+            }
+            else {
+                this.value.sort(function (data1, data2) {
+                    var value1 = _this.resolveFieldData(data1, _this.sortField);
+                    var value2 = _this.resolveFieldData(data2, _this.sortField);
+                    var result = null;
+                    if (value1 instanceof String && value2 instanceof String)
+                        result = value1.localeCompare(value2);
+                    else
+                        result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+                    return (_this.sortOrder * result);
+                });
+            }
             this.first = 0;
-            if (this.hasFilter())
+            if (this.hasFilter()) {
                 this.filter();
-            else
-                this.updateDataToRender(this.value);
+            }
         }
+        //prevent resort at ngDoCheck
+        this.stopSortPropagation = true;
     };
     DataTable.prototype.sortMultiple = function () {
         var _this = this;
@@ -236,11 +261,12 @@ var DataTable = (function () {
             this.value.sort(function (data1, data2) {
                 return _this.multisortField(data1, data2, _this.multiSortMeta, 0);
             });
-            if (this.hasFilter())
+            if (this.hasFilter()) {
                 this.filter();
-            else
-                this.updateDataToRender(this.value);
+            }
         }
+        //prevent resort at ngDoCheck
+        this.stopSortPropagation = true;
     };
     DataTable.prototype.multisortField = function (data1, data2, multiSortMeta, index) {
         var value1 = this.resolveFieldData(data1, multiSortMeta[index].field);
@@ -308,8 +334,14 @@ var DataTable = (function () {
         }
         return order;
     };
-    DataTable.prototype.onRowClick = function (event, rowData) {
+    DataTable.prototype.handleRowClick = function (event, rowData) {
+        this.onRowClick.next({ originalEvent: event, data: rowData });
         if (!this.selectionMode) {
+            return;
+        }
+        var targetNode = event.target.nodeName;
+        if (targetNode == 'INPUT' || targetNode == 'BUTTON' || targetNode == 'A'
+            || (this.domHandler.hasClass(event.target, 'ui-c'))) {
             return;
         }
         var selectionIndex = this.findIndexInSelection(rowData);
@@ -318,29 +350,48 @@ var DataTable = (function () {
         if (selected && metaKey) {
             if (this.isSingleSelectionMode()) {
                 this.selection = null;
-                this.selectionChange.next(null);
+                this.selectionChange.emit(null);
             }
             else {
                 this.selection.splice(selectionIndex, 1);
-                this.selectionChange.next(this.selection);
+                this.selectionChange.emit(this.selection);
             }
-            this.onRowUnselect.next({ originalEvent: event, data: rowData });
+            this.onRowUnselect.emit({ originalEvent: event, data: rowData });
         }
         else {
             if (this.isSingleSelectionMode()) {
                 this.selection = rowData;
-                this.selectionChange.next(rowData);
+                this.selectionChange.emit(rowData);
             }
             else if (this.isMultipleSelectionMode()) {
                 this.selection = (!metaKey) ? [] : this.selection || [];
                 this.selection.push(rowData);
-                this.selectionChange.next(this.selection);
+                this.selectionChange.emit(this.selection);
             }
-            this.onRowSelect.next({ originalEvent: event, data: rowData });
+            this.onRowSelect.emit({ originalEvent: event, data: rowData });
+        }
+    };
+    DataTable.prototype.onRowRightClick = function (event, rowData) {
+        if (this.contextMenu) {
+            var selectionIndex = this.findIndexInSelection(rowData);
+            var selected = selectionIndex != -1;
+            if (!selected) {
+                if (this.isSingleSelectionMode()) {
+                    this.selection = rowData;
+                    this.selectionChange.emit(rowData);
+                }
+                else if (this.isMultipleSelectionMode()) {
+                    this.selection = [];
+                    this.selection.push(rowData);
+                    this.selectionChange.emit(this.selection);
+                }
+            }
+            this.contextMenu.show(event);
+            this.onContextMenuSelect.emit({ originalEvent: event, data: rowData });
         }
     };
     DataTable.prototype.rowDblclick = function (event, rowData) {
-        this.onRowDblclick.next({ originalEvent: event, data: rowData });
+        this.onRowDblclick.emit({ originalEvent: event, data: rowData });
     };
     DataTable.prototype.isSingleSelectionMode = function () {
         return this.selectionMode === 'single';
@@ -380,8 +431,9 @@ var DataTable = (function () {
         }, this.filterDelay);
     };
     DataTable.prototype.filter = function () {
+        this.first = 0;
         if (this.lazy) {
-            this.onLazyLoad.next(this.createLazyLoadMetadata());
+            this.onLazyLoad.emit(this.createLazyLoadMetadata());
         }
         else {
             this.filteredValue = [];
@@ -402,8 +454,8 @@ var DataTable = (function () {
                         }
                     }
                     //global
-                    if (this.globalFilter && !globalMatch && col.filter) {
-                        globalMatch = this.filterConstraints['contains'](this.value[i][col.field], this.globalFilter.value);
+                    if (this.globalFilter && !globalMatch) {
+                        globalMatch = this.filterConstraints['contains'](this.resolveFieldData(this.value[i], col.field), this.globalFilter.value);
                     }
                 }
                 var matches = localMatch;
@@ -422,6 +474,9 @@ var DataTable = (function () {
             }
             this.updateDataToRender(this.filteredValue || this.value);
         }
+        this.onFilter.emit({
+            filters: this.filters
+        });
     };
     DataTable.prototype.hasFilter = function () {
         var empty = true;
@@ -438,7 +493,7 @@ var DataTable = (function () {
     };
     DataTable.prototype.switchCellToEditMode = function (element, column, rowData) {
         if (!this.selectionMode && this.editable && column.editable) {
-            this.onEditInit.next({ column: column, data: rowData });
+            this.onEditInit.emit({ column: column, data: rowData });
             var cell = this.findCell(element);
             if (!this.domHandler.hasClass(cell, 'ui-cell-editing')) {
                 this.domHandler.addClass(cell, 'ui-cell-editing');
@@ -454,9 +509,9 @@ var DataTable = (function () {
             }
             else {
                 if (complete)
-                    this.onEditComplete.next({ column: column, data: rowData });
+                    this.onEditComplete.emit({ column: column, data: rowData });
                 else
-                    this.onEditCancel.next({ column: column, data: rowData });
+                    this.onEditCancel.emit({ column: column, data: rowData });
                 var cell = this.findCell(element);
                 this.domHandler.removeClass(cell, 'ui-cell-editing');
                 this.domHandler.removeClass(cell, 'ui-state-highlight');
@@ -465,7 +520,7 @@ var DataTable = (function () {
     };
     DataTable.prototype.onCellEditorKeydown = function (event, column, rowData) {
         if (this.editable) {
-            this.onEdit.next({ originalEvent: event, column: column, data: rowData });
+            this.onEdit.emit({ originalEvent: event, column: column, data: rowData });
             //enter
             if (event.keyCode == 13) {
                 this.switchCellToViewMode(event.target, column, rowData, true);
@@ -490,7 +545,7 @@ var DataTable = (function () {
         jQuery(this.el.nativeElement.children[0]).puicolresize({
             mode: this.columnResizeMode,
             colResize: function (event, ui) {
-                _this.onColResize.next(ui.element);
+                _this.onColResize.emit(ui.element);
             }
         });
     };
@@ -505,7 +560,7 @@ var DataTable = (function () {
                 else {
                     _this.columns.splice(ui.dropIndex, 0, _this.columns.splice(ui.dragIndex, 1)[0]);
                 }
-                _this.onColReorder.next({
+                _this.onColReorder.emit({
                     dragIndex: ui.dragIndex,
                     dropIndex: ui.dropIndex,
                     columns: _this.columns
@@ -547,6 +602,79 @@ var DataTable = (function () {
             multiSortMeta: this.multiSortMeta
         };
     };
+    DataTable.prototype.toggleRow = function (row) {
+        if (!this.expandedRows) {
+            this.expandedRows = [];
+        }
+        var expandedRowIndex = this.findExpandedRowIndex(row);
+        if (expandedRowIndex != -1) {
+            this.expandedRows.splice(expandedRowIndex, 1);
+            this.onRowCollapse.emit(row);
+        }
+        else {
+            this.expandedRows.push(row);
+            this.onRowExpand.emit(row);
+        }
+    };
+    DataTable.prototype.findExpandedRowIndex = function (row) {
+        var index = -1;
+        if (this.expandedRows) {
+            for (var i = 0; i < this.expandedRows.length; i++) {
+                if (this.expandedRows[i] == row) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        return index;
+    };
+    DataTable.prototype.isRowExpanded = function (row) {
+        return this.findExpandedRowIndex(row) != -1;
+    };
+    DataTable.prototype.reset = function () {
+        this.sortField = null;
+        this.sortOrder = 1;
+        this.filteredValue = null;
+        this.filters = {};
+        if (this.paginator) {
+            this.paginate({
+                first: 0,
+                rows: this.rows
+            });
+        }
+        else {
+            this.updateDataToRender(this.value);
+        }
+    };
+    DataTable.prototype.visibleColumns = function () {
+        return this.columns.filter(function (c) { return !c.hidden; });
+    };
+    DataTable.prototype.exportCSV = function () {
+        var _this = this;
+        var data = this.value, csv = "data:text/csv;charset=utf-8,";
+        //headers
+        for (var i = 0; i < this.columns.length; i++) {
+            if (this.columns[i].field) {
+                csv += this.columns[i].field;
+                if (i < (this.columns.length - 1)) {
+                    csv += this.csvSeparator;
+                }
+            }
+        }
+        //body        
+        this.value.forEach(function (record, i) {
+            csv += '\n';
+            for (var i_1 = 0; i_1 < _this.columns.length; i_1++) {
+                if (_this.columns[i_1].field) {
+                    csv += _this.resolveFieldData(record, _this.columns[i_1].field);
+                    if (i_1 < (_this.columns.length - 1)) {
+                        csv += _this.csvSeparator;
+                    }
+                }
+            }
+        });
+        window.open(encodeURI(csv));
+    };
     DataTable.prototype.ngOnDestroy = function () {
         if (this.resizableColumns) {
             jQuery(this.el.nativeElement.children[0]).puicolresize('destroy');
@@ -581,8 +709,16 @@ var DataTable = (function () {
     ], DataTable.prototype, "pageLinks", void 0);
     __decorate([
         core_1.Input(), 
+        __metadata('design:type', Array)
+    ], DataTable.prototype, "rowsPerPageOptions", void 0);
+    __decorate([
+        core_1.Input(), 
         __metadata('design:type', Boolean)
     ], DataTable.prototype, "responsive", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Boolean)
+    ], DataTable.prototype, "stacked", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', String)
@@ -602,6 +738,10 @@ var DataTable = (function () {
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
+    ], DataTable.prototype, "onRowClick", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
     ], DataTable.prototype, "onRowSelect", void 0);
     __decorate([
         core_1.Output(), 
@@ -611,6 +751,10 @@ var DataTable = (function () {
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], DataTable.prototype, "onRowDblclick", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], DataTable.prototype, "onContextMenuSelect", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Number)
@@ -665,7 +809,7 @@ var DataTable = (function () {
     ], DataTable.prototype, "footerRows", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], DataTable.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -692,6 +836,14 @@ var DataTable = (function () {
         __metadata('design:type', Array)
     ], DataTable.prototype, "multiSortMeta", void 0);
     __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], DataTable.prototype, "contextMenu", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', String)
+    ], DataTable.prototype, "csvSeparator", void 0);
+    __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], DataTable.prototype, "onEditInit", void 0);
@@ -708,6 +860,18 @@ var DataTable = (function () {
         __metadata('design:type', core_1.EventEmitter)
     ], DataTable.prototype, "onEditCancel", void 0);
     __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], DataTable.prototype, "onPage", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], DataTable.prototype, "onSort", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], DataTable.prototype, "onFilter", void 0);
+    __decorate([
         core_1.ContentChild(header_1.Header), 
         __metadata('design:type', Object)
     ], DataTable.prototype, "header", void 0);
@@ -715,17 +879,33 @@ var DataTable = (function () {
         core_1.ContentChild(footer_1.Footer), 
         __metadata('design:type', Object)
     ], DataTable.prototype, "footer", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Boolean)
+    ], DataTable.prototype, "expandableRows", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], DataTable.prototype, "onRowExpand", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], DataTable.prototype, "onRowCollapse", void 0);
+    __decorate([
+        core_1.ContentChild(core_1.TemplateRef), 
+        __metadata('design:type', core_1.TemplateRef)
+    ], DataTable.prototype, "rowExpansionTemplate", void 0);
     DataTable = __decorate([
         core_1.Component({
             selector: 'p-dataTable',
-            template: "\n        <div [attr.style]=\"style\" [attr.class]=\"styleClass\" [ngClass]=\"{'ui-datatable ui-widget': true, 'ui-datatable-reflow':responsive}\">\n            <div class=\"ui-datatable-header ui-widget-header\" *ngIf=\"header\">\n                <ng-content select=\"header\"></ng-content>\n            </div>\n            <div class=\"ui-datatable-tablewrapper\" *ngIf=\"!scrollable\">\n                <table>\n                    <thead>\n                        <tr *ngIf=\"!headerRows\" class=\"ui-state-default\">\n                            <th #headerCell *ngFor=\"#col of columns\" [attr.style]=\"col.style\" [attr.class]=\"col.styleClass\"\n                                (click)=\"sort($event,col)\" (mouseenter)=\"hoveredHeader = $event.target\" (mouseleave)=\"hoveredHeader = null\"\n                                [ngClass]=\"{'ui-state-default ui-unselectable-text':true, 'ui-state-hover': headerCell === hoveredHeader && col.sortable,'ui-sortable-column': col.sortable,'ui-state-active': isSorted(col)}\">\n                                <span class=\"ui-column-title\">{{col.header}}</span>\n                                <span class=\"ui-sortable-column-icon fa fa-fw fa-sort\" *ngIf=\"col.sortable\"\n                                     [ngClass]=\"{'fa-sort-desc': (getSortOrder(col) == -1),'fa-sort-asc': (getSortOrder(col) == 1)}\"></span>\n                                <input type=\"text\" pInputText class=\"ui-column-filter\" *ngIf=\"col.filter\" (click)=\"onFilterInputClick($event)\" (keyup)=\"onFilterKeyup($event.target.value, col.field, col.filterMatchMode)\"/>\n                            </th>\n                        </tr>\n                        <tr *ngFor=\"#headerRow of headerRows\" class=\"ui-state-default\">\n                            <th #headerCell *ngFor=\"#col of headerRow.columns\" [attr.style]=\"col.style\" [attr.class]=\"col.styleClass\" [attr.colspan]=\"col.colspan\" [attr.rowspan]=\"col.rowspan\"\n                                (click)=\"sort($event,col)\" (mouseenter)=\"hoveredHeader = $event.target\" (mouseleave)=\"hoveredHeader = null\"\n                                [ngClass]=\"{'ui-state-default ui-unselectable-text':true, 'ui-state-hover': headerCell === hoveredHeader && col.sortable,'ui-sortable-column': col.sortable,'ui-state-active': isSorted(col)}\">\n                                <span class=\"ui-column-title\">{{col.header}}</span>\n                                <span class=\"ui-sortable-column-icon fa fa-fw fa-sort\" *ngIf=\"col.sortable\"\n                                     [ngClass]=\"{'fa-sort-desc': (getSortOrder(col) == -1),'fa-sort-asc': (getSortOrder(col) == 1)}\"></span>\n                                <input type=\"text\" pInputText class=\"ui-column-filter\" *ngIf=\"col.filter\" (click)=\"onFilterInputClick($event)\" (keyup)=\"onFilterKeyup($event.target.value, col.field, col.filterMatchMode)\"/>\n                            </th>\n                        </tr>\n                    </thead>\n                    <tfoot *ngIf=\"hasFooter()\">\n                        <tr *ngIf=\"!footerRows\">\n                            <th *ngFor=\"#col of columns\" [attr.style]=\"col.style\" [attr.class]=\"col.styleClass\" [ngClass]=\"{'ui-state-default':true}\">{{col.footer}}</th>\n                        </tr>\n                        <tr *ngFor=\"#footerRow of footerRows\">\n                            <th *ngFor=\"#col of footerRow.columns\" [attr.style]=\"col.style\" [attr.class]=\"col.styleClass\" \n                                [attr.colspan]=\"col.colspan\" [attr.rowspan]=\"col.rowspan\"\n                                [ngClass]=\"{'ui-state-default':true}\">{{col.footer}}</th>\n                        </tr>\n                    </tfoot>\n                    <tbody class=\"ui-datatable-data ui-widget-content\">\n                        <tr #rowElement *ngFor=\"#rowData of dataToRender;#even = even; #odd = odd;\" class=\"ui-widget-content\" (mouseenter)=\"hoveredRow = $event.target\" (mouseleave)=\"hoveredRow = null\"\n                                (click)=\"onRowClick($event, rowData)\" (dblclick)=\"rowDblclick($event,rowData)\" \n                                [ngClass]=\"{'ui-datatable-even':even,'ui-datatable-odd':odd,'ui-state-hover': (selectionMode && rowElement == hoveredRow), 'ui-state-highlight': isSelected(rowData)}\">\n                            <td *ngFor=\"#col of columns\" [attr.style]=\"col.style\" [attr.class]=\"col.styleClass\" \n                                [ngClass]=\"{'ui-editable-column':col.editable}\" (click)=\"switchCellToEditMode($event.target,col,rowData)\">\n                                <span class=\"ui-column-title\" *ngIf=\"responsive\">{{col.header}}</span>\n                                <span class=\"ui-cell-data\" *ngIf=\"!col.template\">{{resolveFieldData(rowData,col.field)}}</span>\n                                <span class=\"ui-cell-data\" *ngIf=\"col.template\">\n                                    <p-columnTemplateLoader [column]=\"col\" [rowData]=\"rowData\"></p-columnTemplateLoader>\n                                </span>\n                                <input type=\"text\" class=\"ui-cell-editor ui-state-highlight\" *ngIf=\"col.editable\" [(ngModel)]=\"rowData[col.field]\" \n                                        (blur)=\"switchCellToViewMode($event.target,col,rowData,true)\" (keydown)=\"onCellEditorKeydown($event, col, rowData)\"/>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n            <div class=\"ui-widget-header ui-datatable-scrollable-header\" *ngIf=\"scrollable\">\n                <div class=\"ui-datatable-scrollable-header-box\">\n                    <table>\n                        <thead>\n                            <tr>\n                                <th #headerCell *ngFor=\"#col of columns\" [attr.style]=\"col.style\" [attr.class]=\"col.styleClass\"\n                                    (click)=\"sort(col)\" (mouseenter)=\"hoveredHeader = $event.target\" (mouseleave)=\"hoveredHeader = null\"\n                                    [ngClass]=\"{'ui-state-default ui-unselectable-text':true, 'ui-state-hover': headerCell === hoveredHeader && col.sortable,'ui-sortable-column': col.sortable,'ui-state-active': col.field === sortField}\">\n                                    <span class=\"ui-column-title\">{{col.header}}</span>\n                                    <span class=\"ui-sortable-column-icon fa fa-fw fa-sort\" *ngIf=\"col.sortable\"\n                                         [ngClass]=\"{'fa-sort-desc': (col.field === sortField) && (sortOrder == -1),'fa-sort-asc': (col.field === sortField) && (sortOrder == 1)}\"></span>\n                                    <input type=\"text\" pInputText class=\"ui-column-filter\" *ngIf=\"col.filter\" (click)=\"onFilterInputClick($event)\" (keyup)=\"onFilterKeyup($event.target.value, col.field, col.filterMatchMode)\"/>\n                                </th>\n                            </tr>\n                        </thead>\n                    </table>\n                </div>\n            </div>\n            <div class=\"ui-datatable-scrollable-body\" *ngIf=\"scrollable\">\n                <table>\n                    <tbody class=\"ui-datatable-data ui-widget-content\">\n                        <tr #rowElement *ngFor=\"#rowData of dataToRender;#even = even; #odd = odd;\" class=\"ui-widget-content\" (mouseenter)=\"hoveredRow = $event.target\" (mouseleave)=\"hoveredRow = null\"\n                                (click)=\"onRowClick($event, rowData)\" (dblclick)=\"rowDblclick($event,rowData)\" \n                                [ngClass]=\"{'ui-datatable-even':even,'ui-datatable-odd':odd,'ui-state-hover': (selectionMode && rowElement == hoveredRow), 'ui-state-highlight': isSelected(rowData)}\">\n                            <td *ngFor=\"#col of columns\" [attr.style]=\"col.style\" [attr.class]=\"col.styleClass\" [ngClass]=\"{'ui-editable-column':col.editable}\" (click)=\"switchCellToEditMode($event.target,col,rowData)\">\n                                <span class=\"ui-column-title\" *ngIf=\"responsive\">{{col.header}}</span>\n                                <span class=\"ui-cell-data\">{{rowData[col.field]}}</span>\n                                <input type=\"text\" class=\"ui-cell-editor ui-state-highlight\" *ngIf=\"col.editable\" [(ngModel)]=\"rowData[col.field]\" \n                                        (blur)=\"switchCellToViewMode($event.target,col,rowData,true)\" (keydown)=\"onCellEditorKeydown($event,col,rowData)\"/>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n            <p-paginator [rows]=\"rows\" [first]=\"first\" [totalRecords]=\"totalRecords\" [pageLinkSize]=\"pageLinks\" styleClass=\"ui-paginator-bottom\"\n                (onPageChange)=\"paginate($event)\" *ngIf=\"paginator\"></p-paginator>\n            <div class=\"ui-datatable-footer ui-widget-header\" *ngIf=\"footer\">\n                <ng-content select=\"footer\"></ng-content>\n            </div>\n        </div>\n    ",
-            directives: [paginator_1.Paginator, inputtext_1.InputText, columntemplateloader_1.ColumnTemplateLoader],
+            template: "\n        <div [ngStyle]=\"style\" [class]=\"styleClass\" \n            [ngClass]=\"{'ui-datatable ui-widget': true, 'ui-datatable-reflow':responsive, 'ui-datatable-stacked': stacked}\">\n            <div class=\"ui-datatable-header ui-widget-header\" *ngIf=\"header\">\n                <ng-content select=\"header\"></ng-content>\n            </div>\n            <div class=\"ui-datatable-tablewrapper\" *ngIf=\"!scrollable\">\n                <table>\n                    <thead>\n                        <tr *ngIf=\"!headerRows\" class=\"ui-state-default\">\n                            <th #headerCell *ngFor=\"let col of columns\" [ngStyle]=\"col.style\" [class]=\"col.styleClass\" [style.display]=\"col.hidden ? 'none' : 'table-cell'\"\n                                (click)=\"sort($event,col)\" (mouseenter)=\"hoveredHeader = $event.target\" (mouseleave)=\"hoveredHeader = null\"\n                                [ngClass]=\"{'ui-state-default ui-unselectable-text':true, 'ui-state-hover': headerCell === hoveredHeader && col.sortable,'ui-sortable-column': col.sortable,'ui-state-active': isSorted(col)}\">\n                                <span class=\"ui-column-title\">{{col.header}}</span>\n                                <span class=\"ui-sortable-column-icon fa fa-fw fa-sort\" *ngIf=\"col.sortable\"\n                                     [ngClass]=\"{'fa-sort-desc': (getSortOrder(col) == -1),'fa-sort-asc': (getSortOrder(col) == 1)}\"></span>\n                                <input type=\"text\" pInputText class=\"ui-column-filter\" *ngIf=\"col.filter\" [value]=\"filters[col.field] ? filters[col.field].value : ''\" (click)=\"onFilterInputClick($event)\" (keyup)=\"onFilterKeyup($event.target.value, col.field, col.filterMatchMode)\"/>\n                            </th>\n                        </tr>\n                        <tr *ngFor=\"let headerRow of headerRows\" class=\"ui-state-default\">\n                            <th #headerCell *ngFor=\"let col of headerRow.columns\" [ngStyle]=\"col.style\" [class]=\"col.styleClass\" [attr.colspan]=\"col.colspan\" [attr.rowspan]=\"col.rowspan\"\n                                (click)=\"sort($event,col)\" (mouseenter)=\"hoveredHeader = $event.target\" (mouseleave)=\"hoveredHeader = null\" [style.display]=\"col.hidden ? 'none' : 'table-cell'\"\n                                [ngClass]=\"{'ui-state-default ui-unselectable-text':true, 'ui-state-hover': headerCell === hoveredHeader && col.sortable,'ui-sortable-column': col.sortable,'ui-state-active': isSorted(col)}\">\n                                <span class=\"ui-column-title\">{{col.header}}</span>\n                                <span class=\"ui-sortable-column-icon fa fa-fw fa-sort\" *ngIf=\"col.sortable\"\n                                     [ngClass]=\"{'fa-sort-desc': (getSortOrder(col) == -1),'fa-sort-asc': (getSortOrder(col) == 1)}\"></span>\n                                <input type=\"text\" pInputText class=\"ui-column-filter\" *ngIf=\"col.filter\" [value]=\"filters[col.field] ? filters[col.field].value : ''\" (click)=\"onFilterInputClick($event)\" (keyup)=\"onFilterKeyup($event.target.value, col.field, col.filterMatchMode)\"/>\n                            </th>\n                        </tr>\n                    </thead>\n                    <tfoot *ngIf=\"hasFooter()\">\n                        <tr *ngIf=\"!footerRows\">\n                            <th *ngFor=\"let col of columns\" [ngStyle]=\"col.style\" [class]=\"col.styleClass\" [ngClass]=\"{'ui-state-default':true}\" [style.display]=\"col.hidden ? 'none' : 'table-cell'\">{{col.footer}}</th>\n                        </tr>\n                        <tr *ngFor=\"let footerRow of footerRows\">\n                            <th *ngFor=\"let col of footerRow.columns\" [ngStyle]=\"col.style\" [class]=\"col.styleClass\"\n                                [attr.colspan]=\"col.colspan\" [attr.rowspan]=\"col.rowspan\" [style.display]=\"col.hidden ? 'none' : 'table-cell'\"\n                                [ngClass]=\"{'ui-state-default':true}\">{{col.footer}}</th>\n                        </tr>\n                    </tfoot>\n                    <tbody class=\"ui-datatable-data ui-widget-content\">\n                        <template ngFor let-rowData [ngForOf]=\"dataToRender\" let-even=\"even\" let-odd=\"odd\" let-rowIndex=\"index\">\n                            <tr #rowElement class=\"ui-widget-content\" (mouseenter)=\"hoveredRow = $event.target\" (mouseleave)=\"hoveredRow = null\"\n                                    (click)=\"handleRowClick($event, rowData)\" (dblclick)=\"rowDblclick($event,rowData)\" (contextmenu)=\"onRowRightClick($event,rowData)\"\n                                    [ngClass]=\"{'ui-datatable-even':even,'ui-datatable-odd':odd,'ui-state-hover': (selectionMode && rowElement == hoveredRow), 'ui-state-highlight': isSelected(rowData)}\">\n                                <td *ngFor=\"let col of columns\" [ngStyle]=\"col.style\" [class]=\"col.styleClass\" [style.display]=\"col.hidden ? 'none' : 'table-cell'\"\n                                    [ngClass]=\"{'ui-editable-column':col.editable}\" (click)=\"switchCellToEditMode($event.target,col,rowData)\">\n                                    <span class=\"ui-column-title\" *ngIf=\"responsive\">{{col.header}}</span>\n                                    <span class=\"ui-cell-data\" *ngIf=\"!col.template\">{{resolveFieldData(rowData,col.field)}}</span>\n                                    <span class=\"ui-cell-data\" *ngIf=\"col.template\">\n                                        <p-columnTemplateLoader [column]=\"col\" [rowData]=\"rowData\" [rowIndex]=\"rowIndex + first\"></p-columnTemplateLoader>\n                                    </span>\n                                    <input type=\"text\" class=\"ui-cell-editor ui-state-highlight\" *ngIf=\"col.editable\" [(ngModel)]=\"rowData[col.field]\"\n                                            (blur)=\"switchCellToViewMode($event.target,col,rowData,true)\" (keydown)=\"onCellEditorKeydown($event, col, rowData)\"/>\n                                    <div class=\"ui-row-toggler fa fa-fw ui-c\" [ngClass]=\"{'fa-chevron-circle-down':isRowExpanded(rowData), 'fa-chevron-circle-right': !isRowExpanded(rowData)}\"\n                                        *ngIf=\"col.expander\" (click)=\"toggleRow(rowData)\"></div>\n                                </td>\n                            </tr>\n                            <tr *ngIf=\"expandableRows && isRowExpanded(rowData)\">\n                                <td [attr.colspan]=\"visibleColumns().length\">\n                                    <p-rowExpansionLoader [rowData]=\"rowData\" [template]=\"rowExpansionTemplate\"></p-rowExpansionLoader>\n                                </td>\n                            </tr>\n                        </template>\n                    </tbody>\n                </table>\n            </div>\n            <div class=\"ui-widget-header ui-datatable-scrollable-header\" *ngIf=\"scrollable\">\n                <div class=\"ui-datatable-scrollable-header-box\">\n                    <table>\n                        <thead>\n                            <tr>\n                                <th #headerCell *ngFor=\"let col of columns\" [ngStyle]=\"col.style\" [class]=\"col.styleClass\" [style.display]=\"col.hidden ? 'none' : 'table-cell'\"\n                                    (click)=\"sort($event,col)\" (mouseenter)=\"hoveredHeader = $event.target\" (mouseleave)=\"hoveredHeader = null\"\n                                    [ngClass]=\"{'ui-state-default ui-unselectable-text':true, 'ui-state-hover': headerCell === hoveredHeader && col.sortable,'ui-sortable-column': col.sortable,'ui-state-active': isSorted(col)}\">\n                                    <span class=\"ui-column-title\">{{col.header}}</span>\n                                    <span class=\"ui-sortable-column-icon fa fa-fw fa-sort\" *ngIf=\"col.sortable\"\n                                         [ngClass]=\"{'fa-sort-desc': (col.field === sortField) && (sortOrder == -1),'fa-sort-asc': (col.field === sortField) && (sortOrder == 1)}\"></span>\n                                    <input type=\"text\" pInputText class=\"ui-column-filter\" *ngIf=\"col.filter\" (click)=\"onFilterInputClick($event)\" (keyup)=\"onFilterKeyup($event.target.value, col.field, col.filterMatchMode)\"/>\n                                </th>\n                            </tr>\n                        </thead>\n                    </table>\n                </div>\n            </div>\n            <div class=\"ui-datatable-scrollable-body\" *ngIf=\"scrollable\">\n                <table>\n                    <tbody class=\"ui-datatable-data ui-widget-content\">\n                    <template ngFor let-rowData [ngForOf]=\"dataToRender\" let-even=\"even\" let-odd=\"odd\" let-rowIndex=\"index\">\n                        <tr #rowElement class=\"ui-widget-content\" (mouseenter)=\"hoveredRow = $event.target\" (mouseleave)=\"hoveredRow = null\"\n                                (click)=\"handleRowClick($event, rowData)\" (dblclick)=\"rowDblclick($event,rowData)\" (contextmenu)=\"onRowRightClick($event,rowData)\"\n                                [ngClass]=\"{'ui-datatable-even':even,'ui-datatable-odd':odd,'ui-state-hover': (selectionMode && rowElement == hoveredRow), 'ui-state-highlight': isSelected(rowData)}\">\n                            <td *ngFor=\"let col of columns\" [ngStyle]=\"col.style\" [class]=\"col.styleClass\" [style.display]=\"col.hidden ? 'none' : 'table-cell'\"\n                                [ngClass]=\"{'ui-editable-column':col.editable}\" (click)=\"switchCellToEditMode($event.target,col,rowData)\">\n                                <span class=\"ui-column-title\" *ngIf=\"responsive\">{{col.header}}</span>\n                                <span class=\"ui-cell-data\" *ngIf=\"!col.template\">{{resolveFieldData(rowData,col.field)}}</span>\n                                <span class=\"ui-cell-data\" *ngIf=\"col.template\">\n                                    <p-columnTemplateLoader [column]=\"col\" [rowData]=\"rowData\" [rowIndex]=\"rowIndex + first\"></p-columnTemplateLoader>\n                                </span>\n                                <input type=\"text\" class=\"ui-cell-editor ui-state-highlight\" *ngIf=\"col.editable\" [(ngModel)]=\"rowData[col.field]\"\n                                        (blur)=\"switchCellToViewMode($event.target,col,rowData,true)\" (keydown)=\"onCellEditorKeydown($event, col, rowData)\"/>\n                                <div class=\"ui-row-toggler fa fa-fw ui-c\" [ngClass]=\"{'fa-chevron-circle-down':isRowExpanded(rowData), 'fa-chevron-circle-right': !isRowExpanded(rowData)}\"\n                                    *ngIf=\"col.expander\" (click)=\"toggleRow(rowData)\"></div>\n                            </td>\n                        </tr>\n                        <tr *ngIf=\"expandableRows && isRowExpanded(rowData)\">\n                            <td [attr.colspan]=\"columns.length\">\n                                <p-rowExpansionLoader [rowData]=\"rowData\" [template]=\"rowExpansionTemplate\"></p-rowExpansionLoader>\n                            </td>\n                        </tr>\n                    </template>\n                    </tbody>\n                </table>\n            </div>\n            <p-paginator [rows]=\"rows\" [first]=\"first\" [totalRecords]=\"totalRecords\" [pageLinkSize]=\"pageLinks\" styleClass=\"ui-paginator-bottom\"\n                (onPageChange)=\"paginate($event)\" [rowsPerPageOptions]=\"rowsPerPageOptions\" *ngIf=\"paginator\"></p-paginator>\n            <div class=\"ui-datatable-footer ui-widget-header\" *ngIf=\"footer\">\n                <ng-content select=\"footer\"></ng-content>\n            </div>\n        </div>\n    ",
+            directives: [paginator_1.Paginator, inputtext_1.InputText, columntemplateloader_1.ColumnTemplateLoader, rowexpansionloader_1.RowExpansionLoader],
             providers: [domhandler_1.DomHandler]
         }),
         __param(3, core_1.Query(column_1.Column)), 
         __metadata('design:paramtypes', [core_1.ElementRef, domhandler_1.DomHandler, core_1.IterableDiffers, core_1.QueryList, core_1.Renderer])
     ], DataTable);
     return DataTable;
-})();
+}());
 exports.DataTable = DataTable;
 //# sourceMappingURL=datatable.js.map

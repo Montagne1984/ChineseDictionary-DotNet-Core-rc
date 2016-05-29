@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var Paginator = (function () {
     function Paginator() {
         this.rows = 0;
@@ -62,7 +63,7 @@ var Paginator = (function () {
                 pageCount: pc
             };
             this.updatePageLinks();
-            this.onPageChange.next(state);
+            this.onPageChange.emit(state);
         }
     };
     Paginator.prototype.getPage = function () {
@@ -79,6 +80,10 @@ var Paginator = (function () {
     };
     Paginator.prototype.changePageToLast = function () {
         this.changePage(this.getPageCount() - 1);
+    };
+    Paginator.prototype.onRppChange = function (event) {
+        this.rows = this.rowsPerPageOptions[event.target.selectedIndex];
+        this.changePageToFirst();
     };
     __decorate([
         core_1.Input(), 
@@ -98,7 +103,7 @@ var Paginator = (function () {
     ], Paginator.prototype, "onPageChange", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], Paginator.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -106,16 +111,20 @@ var Paginator = (function () {
     ], Paginator.prototype, "styleClass", void 0);
     __decorate([
         core_1.Input(), 
+        __metadata('design:type', Array)
+    ], Paginator.prototype, "rowsPerPageOptions", void 0);
+    __decorate([
+        core_1.Input(), 
         __metadata('design:type', Number)
     ], Paginator.prototype, "totalRecords", null);
     Paginator = __decorate([
         core_1.Component({
             selector: 'p-paginator',
-            template: "\n        <div [attr.class]=\"styleClass\" [attr.style]=\"style\" [ngClass]=\"{'ui-paginator ui-widget-header ui-unselectable-text':true}\">\n            <span #firstlink class=\"ui-paginator-first ui-paginator-element ui-state-default ui-corner-all\" (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\"\n                        (click)=\"changePageToFirst()\" [ngClass]=\"{'ui-state-disabled':isFirstPage(),'ui-state-hover':(firstlink === hoveredItem && !isFirstPage())}\">\n                <span class=\"fa fa-step-backward\"></span>\n            </span>\n            <span #prevlink class=\"ui-paginator-prev ui-paginator-element ui-state-default ui-corner-all\" (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\"\n                    (click)=\"changePageToPrev()\" [ngClass]=\"{'ui-state-disabled':isFirstPage(),'ui-state-hover':(prevlink === hoveredItem && !isFirstPage())}\">\n                <span class=\"fa fa-backward\"></span>\n            </span>\n            <span class=\"ui-paginator-pages\">\n                <span #plink *ngFor=\"#pageLink of pageLinks\" class=\"ui-paginator-page ui-paginator-element ui-state-default ui-corner-all\"\n                    (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\" (click)=\"changePage(pageLink - 1)\"\n                    [ngClass]=\"{'ui-state-hover':(plink === hoveredItem), 'ui-state-active': (pageLink-1 == getPage())}\">{{pageLink}}</span>\n            </span>\n            <span #nextlink class=\"ui-paginator-next ui-paginator-element ui-state-default ui-corner-all\" (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\"\n                    (click)=\"changePageToNext()\" [ngClass]=\"{'ui-state-disabled':isLastPage(),'ui-state-hover':(nextlink === hoveredItem  && !isLastPage())}\">\n                <span class=\"fa fa-forward\"></span>\n            </span>\n            <span #lastlink class=\"ui-paginator-last ui-paginator-element ui-state-default ui-corner-all\" (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\"\n                    (click)=\"changePageToLast()\" [ngClass]=\"{'ui-state-disabled':isLastPage(),'ui-state-hover':(lastlink === hoveredItem  && !isLastPage())}\">\n                <span class=\"fa fa-step-forward\"></span>\n            </span>\n        </div>\n    "
+            template: "\n        <div [class]=\"styleClass\" [ngStyle]=\"style\" [ngClass]=\"{'ui-paginator ui-widget-header ui-unselectable-text':true}\">\n            <span #firstlink class=\"ui-paginator-first ui-paginator-element ui-state-default ui-corner-all\" (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\"\n                        (click)=\"changePageToFirst()\" [ngClass]=\"{'ui-state-disabled':isFirstPage(),'ui-state-hover':(firstlink === hoveredItem && !isFirstPage())}\">\n                <span class=\"fa fa-step-backward\"></span>\n            </span>\n            <span #prevlink class=\"ui-paginator-prev ui-paginator-element ui-state-default ui-corner-all\" (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\"\n                    (click)=\"changePageToPrev()\" [ngClass]=\"{'ui-state-disabled':isFirstPage(),'ui-state-hover':(prevlink === hoveredItem && !isFirstPage())}\">\n                <span class=\"fa fa-backward\"></span>\n            </span>\n            <span class=\"ui-paginator-pages\">\n                <span #plink *ngFor=\"let pageLink of pageLinks\" class=\"ui-paginator-page ui-paginator-element ui-state-default ui-corner-all\"\n                    (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\" (click)=\"changePage(pageLink - 1)\"\n                    [ngClass]=\"{'ui-state-hover':(plink === hoveredItem), 'ui-state-active': (pageLink-1 == getPage())}\">{{pageLink}}</span>\n            </span>\n            <span #nextlink class=\"ui-paginator-next ui-paginator-element ui-state-default ui-corner-all\" (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\"\n                    (click)=\"changePageToNext()\" [ngClass]=\"{'ui-state-disabled':isLastPage(),'ui-state-hover':(nextlink === hoveredItem  && !isLastPage())}\">\n                <span class=\"fa fa-forward\"></span>\n            </span>\n            <span #lastlink class=\"ui-paginator-last ui-paginator-element ui-state-default ui-corner-all\" (mouseenter)=\"hoveredItem = $event.target\" (mouseleave)=\"hoveredItem = null\"\n                    (click)=\"changePageToLast()\" [ngClass]=\"{'ui-state-disabled':isLastPage(),'ui-state-hover':(lastlink === hoveredItem  && !isLastPage())}\">\n                <span class=\"fa fa-step-forward\"></span>\n            </span>\n            <select class=\"ui-paginator-rpp-options ui-widget ui-state-default\" *ngIf=\"rowsPerPageOptions\" (change)=\"onRppChange($event)\">\n                <option *ngFor=\"let opt of rowsPerPageOptions\" [value]=\"opt\" [selected]=\"rows == opt\">{{opt}}</option>\n            </select>\n        </div>\n    "
         }), 
         __metadata('design:paramtypes', [])
     ], Paginator);
     return Paginator;
-})();
+}());
 exports.Paginator = Paginator;
 //# sourceMappingURL=paginator.js.map

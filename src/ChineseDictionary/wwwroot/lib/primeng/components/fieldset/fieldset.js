@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var Fieldset = (function () {
     function Fieldset() {
         this.collapsed = false;
@@ -26,12 +27,12 @@ var Fieldset = (function () {
     };
     Fieldset.prototype.toggle = function (event) {
         if (this.toggleable) {
-            this.onBeforeToggle.next({ originalEvent: event, collapsed: this.collapsed });
+            this.onBeforeToggle.emit({ originalEvent: event, collapsed: this.collapsed });
             if (this.collapsed)
                 this.expand(event);
             else
                 this.collapse(event);
-            this.onAfterToggle.next({ originalEvent: event, collapsed: this.collapsed });
+            this.onAfterToggle.emit({ originalEvent: event, collapsed: this.collapsed });
         }
     };
     Fieldset.prototype.expand = function (event) {
@@ -62,7 +63,7 @@ var Fieldset = (function () {
     ], Fieldset.prototype, "onAfterToggle", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], Fieldset.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -71,11 +72,11 @@ var Fieldset = (function () {
     Fieldset = __decorate([
         core_1.Component({
             selector: 'p-fieldset',
-            template: "\n        <fieldset [ngClass]=\"{'ui-fieldset ui-widget ui-widget-content ui-corner-all': true, 'ui-fieldset-toggleable': toggleable}\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <legend class=\"ui-fieldset-legend ui-corner-all ui-state-default ui-unselectable-text\" \n                (mouseenter)=\"onLegendMouseenter($event)\" (mouseleave)=\"onLegendMouseleave($event)\" (click)=\"toggle($event)\" [ngClass]=\"{'ui-state-hover':hover}\">\n                <span *ngIf=\"toggleable\" class=\"ui-fieldset-toggler fa fa-w\" [ngClass]=\"{'fa-minus': !collapsed,'fa-plus':collapsed}\"></span>\n                {{legend}}\n            </legend>\n            <div class=\"ui-fieldset-content\" [style.display]=\"collapsed ? 'none' : 'block'\">\n                <ng-content></ng-content>\n            </div>\n        </fieldset>\n    ",
+            template: "\n        <fieldset [ngClass]=\"{'ui-fieldset ui-widget ui-widget-content ui-corner-all': true, 'ui-fieldset-toggleable': toggleable}\" [ngStyle]=\"style\" [class]=\"styleClass\">\n            <legend class=\"ui-fieldset-legend ui-corner-all ui-state-default ui-unselectable-text\" \n                (mouseenter)=\"onLegendMouseenter($event)\" (mouseleave)=\"onLegendMouseleave($event)\" (click)=\"toggle($event)\" [ngClass]=\"{'ui-state-hover':hover}\">\n                <span *ngIf=\"toggleable\" class=\"ui-fieldset-toggler fa fa-w\" [ngClass]=\"{'fa-minus': !collapsed,'fa-plus':collapsed}\"></span>\n                {{legend}}\n            </legend>\n            <div class=\"ui-fieldset-content\" [style.display]=\"collapsed ? 'none' : 'block'\">\n                <ng-content></ng-content>\n            </div>\n        </fieldset>\n    ",
         }), 
         __metadata('design:paramtypes', [])
     ], Fieldset);
     return Fieldset;
-})();
+}());
 exports.Fieldset = Fieldset;
 //# sourceMappingURL=fieldset.js.map

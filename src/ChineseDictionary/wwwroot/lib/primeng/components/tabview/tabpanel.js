@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var TabPanel = (function () {
     function TabPanel() {
     }
@@ -29,7 +30,7 @@ var TabPanel = (function () {
     ], TabPanel.prototype, "closable", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], TabPanel.prototype, "headerStyle", void 0);
     __decorate([
         core_1.Input(), 
@@ -43,6 +44,6 @@ var TabPanel = (function () {
         __metadata('design:paramtypes', [])
     ], TabPanel);
     return TabPanel;
-})();
+}());
 exports.TabPanel = TabPanel;
 //# sourceMappingURL=tabpanel.js.map

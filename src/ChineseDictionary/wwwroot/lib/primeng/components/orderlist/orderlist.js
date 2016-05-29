@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,13 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var button_1 = require('../button/button');
 var domhandler_1 = require('../dom/domhandler');
 var OrderList = (function () {
     function OrderList(el, domHandler) {
         this.el = el;
         this.domHandler = domHandler;
+        this.onReorder = new core_1.EventEmitter();
     }
     OrderList.prototype.onMouseover = function (event) {
         var element = event.target;
@@ -69,68 +71,80 @@ var OrderList = (function () {
             this.domHandler.addClass(item, 'ui-state-highlight');
         }
     };
-    OrderList.prototype.moveUp = function (listElement) {
+    OrderList.prototype.moveUp = function (event, listElement) {
         var selectedElements = this.getSelectedListElements(listElement);
-        for (var i = 0; i < selectedElements.length; i++) {
-            var selectedElement = selectedElements[i];
-            var selectedElementIndex = this.domHandler.index(selectedElement);
-            if (selectedElementIndex != 0) {
-                var movedItem = this.value[selectedElementIndex];
-                var temp = this.value[selectedElementIndex - 1];
-                this.value[selectedElementIndex - 1] = movedItem;
-                this.value[selectedElementIndex] = temp;
-                this.domHandler.scrollInView(listElement, listElement.children[selectedElementIndex - 1]);
+        if (selectedElements.length) {
+            for (var i = 0; i < selectedElements.length; i++) {
+                var selectedElement = selectedElements[i];
+                var selectedElementIndex = this.domHandler.index(selectedElement);
+                if (selectedElementIndex != 0) {
+                    var movedItem = this.value[selectedElementIndex];
+                    var temp = this.value[selectedElementIndex - 1];
+                    this.value[selectedElementIndex - 1] = movedItem;
+                    this.value[selectedElementIndex] = temp;
+                    this.domHandler.scrollInView(listElement, listElement.children[selectedElementIndex - 1]);
+                }
+                else {
+                    break;
+                }
             }
-            else {
-                break;
-            }
+            this.onReorder.emit(event);
         }
     };
-    OrderList.prototype.moveTop = function (listElement) {
+    OrderList.prototype.moveTop = function (event, listElement) {
         var selectedElements = this.getSelectedListElements(listElement);
-        for (var i = 0; i < selectedElements.length; i++) {
-            var selectedElement = selectedElements[i];
-            var selectedElementIndex = this.domHandler.index(selectedElement);
-            if (selectedElementIndex != 0) {
-                var movedItem = this.value.splice(selectedElementIndex, 1)[0];
-                this.value.unshift(movedItem);
-                listElement.scrollTop = 0;
+        if (selectedElements.length) {
+            for (var i = 0; i < selectedElements.length; i++) {
+                var selectedElement = selectedElements[i];
+                var selectedElementIndex = this.domHandler.index(selectedElement);
+                if (selectedElementIndex != 0) {
+                    var movedItem = this.value.splice(selectedElementIndex, 1)[0];
+                    this.value.unshift(movedItem);
+                    listElement.scrollTop = 0;
+                }
+                else {
+                    break;
+                }
             }
-            else {
-                break;
-            }
+            this.onReorder.emit(event);
         }
     };
-    OrderList.prototype.moveDown = function (listElement) {
+    OrderList.prototype.moveDown = function (event, listElement) {
         var selectedElements = this.getSelectedListElements(listElement);
-        for (var i = selectedElements.length - 1; i >= 0; i--) {
-            var selectedElement = selectedElements[i];
-            var selectedElementIndex = this.domHandler.index(selectedElement);
-            if (selectedElementIndex != (this.value.length - 1)) {
-                var movedItem = this.value[selectedElementIndex];
-                var temp = this.value[selectedElementIndex + 1];
-                this.value[selectedElementIndex + 1] = movedItem;
-                this.value[selectedElementIndex] = temp;
-                this.domHandler.scrollInView(listElement, listElement.children[selectedElementIndex + 1]);
+        if (selectedElements.length) {
+            for (var i = selectedElements.length - 1; i >= 0; i--) {
+                var selectedElement = selectedElements[i];
+                var selectedElementIndex = this.domHandler.index(selectedElement);
+                if (selectedElementIndex != (this.value.length - 1)) {
+                    var movedItem = this.value[selectedElementIndex];
+                    var temp = this.value[selectedElementIndex + 1];
+                    this.value[selectedElementIndex + 1] = movedItem;
+                    this.value[selectedElementIndex] = temp;
+                    this.domHandler.scrollInView(listElement, listElement.children[selectedElementIndex + 1]);
+                }
+                else {
+                    break;
+                }
             }
-            else {
-                break;
-            }
+            this.onReorder.emit(event);
         }
     };
-    OrderList.prototype.moveBottom = function (listElement) {
+    OrderList.prototype.moveBottom = function (event, listElement) {
         var selectedElements = this.getSelectedListElements(listElement);
-        for (var i = selectedElements.length - 1; i >= 0; i--) {
-            var selectedElement = selectedElements[i];
-            var selectedElementIndex = this.domHandler.index(selectedElement);
-            if (selectedElementIndex != (this.value.length - 1)) {
-                var movedItem = this.value.splice(selectedElementIndex, 1)[0];
-                this.value.push(movedItem);
-                listElement.scrollTop = listElement.scrollHeight;
+        if (selectedElements.length) {
+            for (var i = selectedElements.length - 1; i >= 0; i--) {
+                var selectedElement = selectedElements[i];
+                var selectedElementIndex = this.domHandler.index(selectedElement);
+                if (selectedElementIndex != (this.value.length - 1)) {
+                    var movedItem = this.value.splice(selectedElementIndex, 1)[0];
+                    this.value.push(movedItem);
+                    listElement.scrollTop = listElement.scrollHeight;
+                }
+                else {
+                    break;
+                }
             }
-            else {
-                break;
-            }
+            this.onReorder.emit(event);
         }
     };
     OrderList.prototype.getSelectedListElements = function (listElement) {
@@ -146,7 +160,7 @@ var OrderList = (function () {
     ], OrderList.prototype, "header", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], OrderList.prototype, "style", void 0);
     __decorate([
         core_1.Input(), 
@@ -154,12 +168,16 @@ var OrderList = (function () {
     ], OrderList.prototype, "styleClass", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], OrderList.prototype, "listStyle", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Boolean)
     ], OrderList.prototype, "responsive", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], OrderList.prototype, "onReorder", void 0);
     __decorate([
         core_1.ContentChild(core_1.TemplateRef), 
         __metadata('design:type', core_1.TemplateRef)
@@ -167,13 +185,13 @@ var OrderList = (function () {
     OrderList = __decorate([
         core_1.Component({
             selector: 'p-orderList',
-            template: "\n        <div [ngClass]=\"{'ui-orderlist ui-grid ui-widget':true,'ui-grid-responsive':responsive}\" [attr.style]=\"style\" [attr.class]=\"styleClass\">\n            <div class=\"ui-grid-row\">\n                <div class=\"ui-orderlist-controls ui-grid-col-2\">\n                    <button type=\"button\" pButton icon=\"fa-angle-up\" (click)=\"moveUp(listelement)\"></button>\n                    <button type=\"button\" pButton icon=\"fa-angle-double-up\" (click)=\"moveTop(listelement)\"></button>\n                    <button type=\"button\" pButton icon=\"fa-angle-down\" (click)=\"moveDown(listelement)\"></button>\n                    <button type=\"button\" pButton icon=\"fa-angle-double-down\" (click)=\"moveBottom(listelement)\"></button>\n                </div>\n                <div class=\"ui-grid-col-10\">\n                    <div class=\"ui-orderlist-caption ui-widget-header ui-corner-top\" *ngIf=\"header\">{{header}}</div>\n                    <ul #listelement class=\"ui-widget-content ui-orderlist-list ui-corner-bottom\" [attr.style]=\"listStyle\" \n                        (mouseover)=\"onMouseover($event)\" (mouseout)=\"onMouseout($event)\" (click)=\"onClick($event)\">\n                        <template ngFor [ngForOf]=\"value\" [ngForTemplate]=\"itemTemplate\"></template>\n                    </ul>\n                </div>\n            </div>\n        </div>\n    ",
+            template: "\n        <div [ngClass]=\"{'ui-orderlist ui-grid ui-widget':true,'ui-grid-responsive':responsive}\" [ngStyle]=\"style\" [class]=\"styleClass\">\n            <div class=\"ui-grid-row\">\n                <div class=\"ui-orderlist-controls ui-grid-col-2\">\n                    <button type=\"button\" pButton icon=\"fa-angle-up\" (click)=\"moveUp($event,listelement)\"></button>\n                    <button type=\"button\" pButton icon=\"fa-angle-double-up\" (click)=\"moveTop($event,listelement)\"></button>\n                    <button type=\"button\" pButton icon=\"fa-angle-down\" (click)=\"moveDown($event,listelement)\"></button>\n                    <button type=\"button\" pButton icon=\"fa-angle-double-down\" (click)=\"moveBottom($event,listelement)\"></button>\n                </div>\n                <div class=\"ui-grid-col-10\">\n                    <div class=\"ui-orderlist-caption ui-widget-header ui-corner-top\" *ngIf=\"header\">{{header}}</div>\n                    <ul #listelement class=\"ui-widget-content ui-orderlist-list ui-corner-bottom\" [ngStyle]=\"listStyle\" \n                        (mouseover)=\"onMouseover($event)\" (mouseout)=\"onMouseout($event)\" (click)=\"onClick($event)\">\n                        <template ngFor [ngForOf]=\"value\" [ngForTemplate]=\"itemTemplate\"></template>\n                    </ul>\n                </div>\n            </div>\n        </div>\n    ",
             directives: [button_1.Button],
             providers: [domhandler_1.DomHandler]
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, domhandler_1.DomHandler])
     ], OrderList);
     return OrderList;
-})();
+}());
 exports.OrderList = OrderList;
 //# sourceMappingURL=orderlist.js.map

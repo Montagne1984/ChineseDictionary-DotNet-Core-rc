@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,14 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var TreeNodeTemplateLoader = (function () {
     function TreeNodeTemplateLoader(viewContainer) {
         this.viewContainer = viewContainer;
     }
     TreeNodeTemplateLoader.prototype.ngOnInit = function () {
-        var view = this.viewContainer.createEmbeddedView(this.template);
-        view.setLocal('\$implicit', this.node);
+        var view = this.viewContainer.createEmbeddedView(this.template, {
+            '\$implicit': this.node
+        });
     };
     __decorate([
         core_1.Input(), 
@@ -32,6 +34,6 @@ var TreeNodeTemplateLoader = (function () {
         __metadata('design:paramtypes', [core_1.ViewContainerRef])
     ], TreeNodeTemplateLoader);
     return TreeNodeTemplateLoader;
-})();
+}());
 exports.TreeNodeTemplateLoader = TreeNodeTemplateLoader;
 //# sourceMappingURL=treenodetemplateloader.js.map

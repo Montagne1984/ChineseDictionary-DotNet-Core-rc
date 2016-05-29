@@ -1,4 +1,4 @@
-import { ElementRef, AfterViewInit, OnDestroy, DoCheck, EventEmitter, IterableDiffers } from 'angular2/core';
+import { ElementRef, AfterViewInit, OnDestroy, DoCheck, EventEmitter, IterableDiffers } from '@angular/core';
 export declare class DoughnutChart implements AfterViewInit, OnDestroy, DoCheck {
     private el;
     animation: boolean;
@@ -59,4 +59,6 @@ export declare class DoughnutChart implements AfterViewInit, OnDestroy, DoCheck 
     ngOnDestroy(): void;
     onCanvasClick(event: any): void;
     initChart(): void;
+    getCanvas(): any;
+    getBase64Image(): any;
 }

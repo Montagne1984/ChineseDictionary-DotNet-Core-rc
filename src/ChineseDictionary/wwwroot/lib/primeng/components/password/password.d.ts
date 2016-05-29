@@ -1,17 +1,26 @@
-import { ElementRef, OnInit, OnDestroy, OnChanges, SimpleChange } from 'angular2/core';
-export declare class Password implements OnInit, OnDestroy, OnChanges {
+import { ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { DomHandler } from '../dom/domhandler';
+export declare class Password implements AfterViewInit, OnDestroy {
     private el;
+    private domHandler;
     promptLabel: string;
     weakLabel: string;
-    goodLabel: string;
+    mediumLabel: string;
     strongLabel: string;
-    inline: boolean;
-    disabled: boolean;
-    initialized: boolean;
-    constructor(el: ElementRef);
-    ngOnInit(): void;
-    ngOnChanges(changes: {
-        [key: string]: SimpleChange;
-    }): void;
+    hover: boolean;
+    focus: boolean;
+    panel: any;
+    meter: any;
+    info: any;
+    constructor(el: ElementRef, domHandler: DomHandler);
+    ngAfterViewInit(): void;
+    onMouseover(e: any): void;
+    onMouseout(e: any): void;
+    onFocus(e: any): void;
+    onBlur(e: any): void;
+    onKeyup(e: any): void;
+    testStrength(str: string): number;
+    normalize(x: any, y: any): number;
+    isDisabled(): any;
     ngOnDestroy(): void;
 }

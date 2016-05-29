@@ -1,24 +1,26 @@
-import { ElementRef, AfterViewInit, OnDestroy, OnChanges, SimpleChange, EventEmitter } from 'angular2/core';
-export declare class Slider implements AfterViewInit, OnDestroy, OnChanges {
+import { ElementRef, AfterViewInit, OnDestroy, OnChanges, SimpleChange, EventEmitter } from '@angular/core';
+import { ControlValueAccessor } from '@angular/common';
+export declare class Slider implements AfterViewInit, OnDestroy, OnChanges, ControlValueAccessor {
     private el;
     animate: boolean;
     disabled: boolean;
     min: number;
     max: number;
     orientation: string;
-    value: number;
-    values: number[];
     step: number;
     range: boolean;
-    style: string;
+    style: any;
     styleClass: string;
     onChange: EventEmitter<any>;
-    valueChange: EventEmitter<any>;
-    valuesChange: EventEmitter<any>;
+    value: any;
+    onModelChange: Function;
+    onModelTouched: Function;
     initialized: boolean;
-    stopNgOnChangesPropagation: boolean;
     constructor(el: ElementRef);
     ngAfterViewInit(): void;
+    writeValue(value: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
     ngOnChanges(changes: {
         [key: string]: SimpleChange;
     }): void;

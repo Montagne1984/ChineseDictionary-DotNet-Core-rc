@@ -1,14 +1,27 @@
-import { ElementRef, SimpleChange } from 'angular2/core';
+import { ElementRef } from '@angular/core';
+import { MenuItem } from '../api/menumodel';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router-deprecated';
+export declare class PanelMenuSub {
+    private router;
+    private location;
+    item: MenuItem;
+    expanded: boolean;
+    constructor(router: Router, location: Location);
+    activeItems: MenuItem[];
+    onClick(event: any, item: MenuItem): void;
+    isActive(item: MenuItem): boolean;
+    getItemUrl(item: MenuItem): string;
+}
 export declare class PanelMenu {
     private el;
-    style: string;
+    model: MenuItem[];
+    style: any;
     styleClass: string;
-    initialized: boolean;
-    menuElement: any;
+    activeItems: MenuItem[];
     constructor(el: ElementRef);
-    ngAfterViewInit(): void;
-    ngOnChanges(changes: {
-        [key: string]: SimpleChange;
-    }): void;
+    headerClick(event: any, item: any): void;
+    unsubscribe(item: any): void;
+    isActive(item: MenuItem): boolean;
     ngOnDestroy(): void;
 }
