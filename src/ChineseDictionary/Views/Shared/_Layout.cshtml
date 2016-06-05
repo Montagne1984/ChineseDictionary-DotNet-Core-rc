@@ -56,15 +56,19 @@
         <script src="~/lib/tether/dist/js/tether.js"></script>
         @*<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>*@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
-        <script src="~/lib/es6-shim/es6-shim.min.js"></script>
-        <script src="~/lib/systemjs/dist/system-polyfills.js"></script>
-        <script src="~/lib/angular2/es6/dev/src/testing/shims_for_IE.js"></script>
-
-        <script src="~/lib/angular2/bundles/angular2-polyfills.js"></script>
+        
+        <!-- 1. Load libraries -->
+        <!-- Polyfill(s) for older browsers -->
+        <script src="~/lib/core-js/client/shim.min.js"></script>
+        <script src="~/lib/zone.js/dist/zone.js"></script>
+        <script src="~/lib/reflect-metadata/Reflect.js"></script>
         <script src="~/lib/systemjs/dist/system.src.js"></script>
-        <script src="~/lib/angular2/bundles/http.dev.js"></script>
-        <script src="~/lib/angular2/bundles/router.dev.js"></script>
-        <script src="~/lib/primeui/primeui-ng-all.js"></script>
+        
+        <!-- 2. Configure SystemJS -->
+        <script src="~/js/systemjs.config.js"></script>
+        <script>
+            System.import('app').catch(function(err){ console.error(err); });
+        </script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment names="Staging,Production">
@@ -79,27 +83,6 @@
             </script>*@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
-    <script>
-        System.config({
-            defaultJSExtensions: true,
-            packages: {
-                app: {
-                    format: 'register',
-                    defaultExtension: 'js'
-                },
-                "/angular2": { "defaultExtension": false }
-            },
-            map: {
-                'primeng': 'lib/primeng'
-            }
-        });
-        System.import('app/main')
-              .then(null, console.error.bind(console));
-    </script>
-    <environment names="Development">
-        <script src="~/lib/rxjs/bundles/Rx.js"></script>
-        <script src="~/lib/angular2/bundles/angular2.dev.js"></script>
     </environment>
 
     @RenderSection("scripts", required: false)

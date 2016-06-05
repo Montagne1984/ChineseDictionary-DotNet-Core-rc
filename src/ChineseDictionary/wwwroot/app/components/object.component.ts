@@ -1,4 +1,4 @@
-﻿import {Component, OnInit} from "angular2/core";
+﻿import {Component, OnInit} from "@angular/core";
 import {Button, Dialog, DataTable, Column, Header, Footer, InputText} from "primeng/primeng";
 
 export abstract class ObjectComponent implements OnInit {

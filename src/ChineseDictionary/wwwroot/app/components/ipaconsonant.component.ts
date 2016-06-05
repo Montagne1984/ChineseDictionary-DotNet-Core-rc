@@ -1,4 +1,4 @@
-﻿import {Component, OnInit, Injectable} from "angular2/core";
+﻿import {Component, OnInit, Injectable} from "@angular/core";
 import {ObjectComponent, IObjectService} from "./object.component";
 import {Button, Dialog, DataTable, Column, Header, Footer, InputText} from "primeng/primeng";
 import {IPAConsonant} from "../domain/ipaconsonant"
