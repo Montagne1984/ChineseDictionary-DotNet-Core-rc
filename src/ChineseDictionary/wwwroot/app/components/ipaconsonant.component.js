@@ -21,9 +21,9 @@ var IPAConsonantComponent = (function () {
         //this.items = [];
     };
     IPAConsonantComponent.prototype.showDialogToAdd = function () {
-        //this.newItem = true;
-        //this.item = new Object();
-        //this.displayDialog = true;
+        this.newItem = true;
+        this.item = new ipaconsonant_1.IPAConsonant();
+        this.displayDialog = true;
     };
     IPAConsonantComponent.prototype.save = function () {
         //if (this.newItem)

@@ -8,6 +8,7 @@
   "_from": "primeng@1.0.0-beta.8",
   "_id": "primeng@1.0.0-beta.8",
   "_inCache": true,
+  "_installable": true,
   "_location": "/primeng",
   "_nodeVersion": "5.4.0",
   "_npmOperationalInternal": {
@@ -54,12 +55,11 @@
   },
   "gitHead": "1fed66bedf46446d9703201636c907116ee780d3",
   "homepage": "https://github.com/primefaces/primeng#readme",
-  "installable": true,
   "license": "Apache-2.0",
   "maintainers": [
     {
-      "name": "cagatay.civici",
-      "email": "cagatay.civici@gmail.com"
+      "email": "cagatay.civici@gmail.com",
+      "name": "cagatay.civici"
     }
   ],
   "name": "primeng",
@@ -67,6 +67,7 @@
   "peerDependencies": {
     "primeui": "^4.1.11"
   },
+  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/primefaces/primeng.git"

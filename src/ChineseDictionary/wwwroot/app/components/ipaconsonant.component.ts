@@ -32,9 +32,9 @@ export class IPAConsonantComponent {
     }
 
     showDialogToAdd() {
-        //this.newItem = true;
-        //this.item = new Object();
-        //this.displayDialog = true;
+        this.newItem = true;
+        this.item = new IPAConsonant();
+        this.displayDialog = true;
     }
 
     save() {
