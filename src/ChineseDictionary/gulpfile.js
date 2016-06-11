@@ -15,7 +15,8 @@ var libPaths = [
     "./node_modules/@angular/**/*",
     "./node_modules/angular2-in-memory-web-api/**/*",
     "./node_modules/rxjs/**/*",
-    './node_modules/primeng/**/*'
+    "./node_modules/primeng/**/*",
+    "./node_modules/angular2localization/**/*"
 ];
 
 gulp.task('copy:lib', function () {

@@ -8,7 +8,6 @@
   "_from": "angular2-in-memory-web-api@0.0.11",
   "_id": "angular2-in-memory-web-api@0.0.11",
   "_inCache": true,
-  "_installable": true,
   "_location": "/angular2-in-memory-web-api",
   "_nodeVersion": "5.6.0",
   "_npmOperationalInternal": {
@@ -79,14 +78,15 @@
   },
   "gitHead": "86926e0b033abeb3791b34d0e2948c654558ebe7",
   "homepage": "https://github.com/angular/in-memory-web-api#readme",
+  "installable": true,
   "jsnext:main": "esm/index.js",
   "keywords": [],
   "license": "ISC",
   "main": "index.js",
   "maintainers": [
     {
-      "email": "wardbell@hotmail.com",
-      "name": "wardbell"
+      "name": "wardbell",
+      "email": "wardbell@hotmail.com"
     }
   ],
   "name": "angular2-in-memory-web-api",
@@ -98,7 +98,6 @@
     "rxjs": "5.0.0-beta.6",
     "zone.js": "^0.6.12"
   },
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/angular/in-memory-web-api.git"
